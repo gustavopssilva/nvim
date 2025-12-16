@@ -23,6 +23,9 @@ opt.wrap = false
 opt.ignorecase = true
 opt.smartcase = true
 
+-- Habilitar destaque de sintaxe e tipo de arquivo SQL
+vim.cmd([[syntax on]])
+vim.cmd([[au BufRead,BufNewFile *.sql set filetype=sql]])
 
 -- Ajustando a cor do fundo do highlight se não gostar... pode tirar...
 vim.cmd[[highlight Search ctermbg=none guibg=none]]
