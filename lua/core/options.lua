@@ -72,6 +72,7 @@ opt.splitbelow = true
 opt.autoread = true -- Se algum outro editor alterar um arquivo que está aberto no vim, ele atualiza
 
 -- Considerar '-' como parte da palavra-chave
+opt.iskeyword:append("_")
 opt.iskeyword:append("-")
 
 -- Habilitar o mouse no nvim
@@ -109,5 +110,9 @@ vim.api.nvim_set_keymap("x", "<A-S-Down>", ":copy '>+1<CR>gv=gv", { noremap = tr
 vim.api.nvim_set_keymap("n", "<A-S-Up>", ":copy .-1<CR>==k", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("x", "<A-S-Up>", ":copy '<-2<CR>gv=gv", { noremap = true, silent = true })
 
+
+
+-- Cancelar a busca por similaridade em um doc
+vim.api.nvim_set_keymap("n", "<Esc><Esc>", ":noh<CR>", { noremap = true, silent = true })
 
 

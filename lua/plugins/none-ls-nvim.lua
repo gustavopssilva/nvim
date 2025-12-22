@@ -4,25 +4,30 @@ return {
   opts = function(_, opts)
     local nls = require("null-ls")
 
-    -- Adiciona ktlint como formatador e linter
+    -- Formatter customizado para pgFormatter
+    local pgformatter = nls.builtins.formatting.prettierd.with({
+      name = "pgformatter",
+      method = nls.methods.FORMATTING,
+      filetypes = { "sql" },
+      generator = nls.generator({
+        command = "pg_format",         -- comando do pgFormatter
+        args = { "--stdin", "--spaces", "2" },  -- lê do stdin e indentação 2 espaços
+        to_stdin = true,
+      }),
+    })
+
+    -- Lista de formatadores/linter
     opts.sources = vim.list_extend(opts.sources or {}, {
-      -- nls.builtins.formatting.ktlint,
-      -- nls.builtins.diagnostics.ktlint,
-         -- JSON/YAML/Markdown
+      -- JSON/YAML/Markdown
       nls.builtins.formatting.prettierd,
-      -- npm install -g @fsouza/prettierd
-
-      -- nls.builtins.formatting.jq,
-      -- nls.builtins.formatting.xmllint,
-      -- sudo apt install jq libxml2-utils
-
+      -- SQL via pgFormatter
+      pgformatter,
+      -- outros linters/formatters podem ser adicionados aqui
     })
 
     -- Formatação automática ao salvar
     opts.on_attach = function(client, bufnr)
       if client.supports_method("textDocument/formatting") then
-       
-
         -- Tecla manual de formatação
         vim.api.nvim_buf_set_keymap(
           bufnr,
@@ -35,4 +40,3 @@ return {
     end
   end,
 }
-
