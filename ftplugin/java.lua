@@ -66,7 +66,18 @@ local config = {
   },
 
   -- Um servidor e cliente LSP dedicados serão iniciados por diretório root único
-  root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "pom.xml", "build.gradle" }),
+  -- root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "pom.xml", "build.gradle" }),
+  root_dir = require("jdtls.setup").find_root({
+  ".git",
+  "mvnw",
+  "pom.xml",
+  "build.gradle",
+  "build.gradle.kts",
+  "settings.gradle",
+  "settings.gradle.kts",
+  "gradlew",
+}),
+
 
   -- Aqui você pode configurar as opções específicas do eclipse.jdt.ls
   -- Consulte https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request

@@ -22,6 +22,7 @@
 
 --   end,
 -- }
+--
 return{
   "nanotech/jellybeans.vim",
   lazy = false,
@@ -46,9 +47,9 @@ return{
     ]])
 
     -- Estilo
-    vim.cmd([[
-      highlight Comment gui=italic
-      highlight Keyword gui=bold
-    ]])
+    -- vim.cmd([[
+    --   highlight Comment gui=italic
+    --   highlight Keyword gui=bold
+    -- ]])
   end,
 }

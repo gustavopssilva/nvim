@@ -2,7 +2,9 @@
 return {
   -- https://github.com/nvim-treesitter/nvim-treesitter
   'nvim-treesitter/nvim-treesitter',
+  -- event = { "BufReadPost", "BufNewFile" },
   event = 'VeryLazy',
+
   dependencies = {
     -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     'nvim-treesitter/nvim-treesitter-textobjects',
@@ -15,18 +17,17 @@ return {
     },
     indent = { enable = true },
     auto_install = true, -- automatically install syntax support when entering new file type buffer
+    -- :TSInstall sql json jsonc e os outros que nao foram
     ensure_installed = {
       'lua',
+      'json',
+      'sql',
       'comment',
       'kotlin',
       'javascript',
       'typescript'
 
     },
-    folding = {
-      enable = true -- habilita abertura e fechamento de blocos de {}
-      -- za(abre ou fecha), zR / zM (abre / fecha todos), manipula os do cursor zo / zc
-    }
   },
   config = function(_, opts)
     local configs = require("nvim-treesitter.configs")

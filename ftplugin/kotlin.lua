@@ -65,7 +65,23 @@ lspconfig.kotlin_language_server.setup({
   capabilities = capabilities,
   root_dir = root_pattern,
   cmd = { "kotlin-language-server" },
+  settings = {
+    kotlin = {
+      compiler = {
+        dependencyClasspath = { ".kls-classpath" },
+        noStdlib = true,
+        noJdk = true,
+      }
+    }
+  }
 })
+
+-- lspconfig.kotlin_language_server.setup({
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   root_dir = root_pattern,
+--   cmd = { "kotlin-language-server" },
+-- })
 
 -- ===============================
 -- Autocompletar com nvim-cmp + LuaSnip
@@ -105,43 +121,3 @@ cmp.setup {
 }
 
 
--- garantir esses executores no plugin do pon do kotlin:expand
-
-
---         <plugin>
---         <groupId>org.jetbrains.kotlin</groupId>
---         <artifactId>kotlin-maven-plugin</artifactId>
---         <!-- tem que ter esses executores para o nvim reconhecer o kotlin -->
---         <executions>
---           <execution>
---             <id>compile</id>
---             <phase>compile</phase>
---             <goals>
---               <goal>compile</goal>
---             </goals>
---           </execution>
---           <execution>
---             <id>test-compile</id>
---             <phase>test-compile</phase>
---             <goals>
---               <goal>test-compile</goal>
---             </goals>
---           </execution>
---         </executions>
-
---         <configuration>
---           <args>
---             <arg>-Xjsr305=strict</arg>
---           </args>
---           <compilerPlugins>
---             <plugin>spring</plugin>
---           </compilerPlugins>
---         </configuration>
---         <dependencies>
---           <dependency>
---             <groupId>org.jetbrains.kotlin</groupId>
---             <artifactId>kotlin-maven-allopen</artifactId>
---             <version>${kotlin.version}</version>
---           </dependency>
---         </dependencies>
---       </plugin>

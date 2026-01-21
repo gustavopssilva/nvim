@@ -37,6 +37,9 @@ vim.cmd([[
   nnoremap <silent> # :let @/='\V\<'.escape(expand('<cword>'), '/\').'\>'<CR>:set hlsearch<CR>
 ]])
 
+-- Cancelar o highlight por similaridade em um doc
+vim.api.nvim_set_keymap("n", "<Esc><Esc>", ":noh<CR>", { noremap = true, silent = true })
+
 -- Linha do Cursor
 opt.cursorline = true
 
@@ -88,6 +91,8 @@ vim.keymap.set({ 'n', 'v' }, '<Right>', '<Nop>', { noremap = true })
 -- Dobramento de código
 opt.foldlevel = 20
 opt.foldmethod = "expr"
+opt.foldenable = true
+opt.foldlevelstart = 99
 opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utiliza o Treesitter para dobrar
 
 -- Movimento das setas
@@ -112,7 +117,5 @@ vim.api.nvim_set_keymap("x", "<A-S-Up>", ":copy '<-2<CR>gv=gv", { noremap = true
 
 
 
--- Cancelar a busca por similaridade em um doc
-vim.api.nvim_set_keymap("n", "<Esc><Esc>", ":noh<CR>", { noremap = true, silent = true })
 
 
