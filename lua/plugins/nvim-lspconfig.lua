@@ -1,4 +1,3 @@
-
 return {
   -- Configuração LSP
   'neovim/nvim-lspconfig',
@@ -20,10 +19,8 @@ return {
     require('mason-lspconfig').setup({
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
-        -- 'jdtls', 'jsonls', 'kotlin_language_server','ktlinit', 'lemminx', 'marksman',
-        'jdtls', 'jsonls',  'lemminx', 'marksman',
-        'quick_lint_js', 'yamlls', 'ts_ls', 'tailwindcss', 'eslint', 'pyright'
-        -- 'quick_lint_js', 'yamlls', 'ts_ls', 'tailwindcss', 'eslint'
+        'jdtls', 'jsonls', 'lemminx', 'marksman',
+        'yamlls', 'ts_ls', 'tailwindcss', 'pyright'
       }
     })
 
@@ -54,68 +51,36 @@ return {
     end
 
 
-    -- Configuração dos servidores LSP
-    -- Adicionar os servidores manualmente e faz um for para rodar cada um
-    --     os que não estão aqui, tem um aruqivo proprio na pasra ftplugin
     local servers = {
       'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
-      'jsonls', 'lemminx', 'marksman', 'quick_lint_js', 'yamlls',
-      'tailwindcss', 'eslint','pyright'
-      -- 'tailwindcss', 'eslint'
+      'jsonls', 'lemminx', 'marksman', 'yamlls',
+      'tailwindcss', 'pyright'
     }
 
--- for _, server in ipairs(servers) do
---   if server == "lua_ls" then
---     lspconfig.lua_ls.setup({
---       on_attach = lsp_attach,
---       capabilities = lsp_capabilities,
---       settings = {
---         Lua = {
---           diagnostics = { globals = { "vim" } },
---           workspace = { library = vim.api.nvim_get_runtime_file("", true) },
---         },
---       },
---     })
---   else
---     lspconfig[server].setup({
---       on_attach = lsp_attach,
---       capabilities = lsp_capabilities,
---     })
---   end
--- end
--- }
 
-for _, server in ipairs(servers) do
-  if server == "lua_ls" then
-    lspconfig.lua_ls.setup({
-      on_attach = lsp_attach,
-      capabilities = lsp_capabilities,
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { "vim" },
+    for _, server in ipairs(servers) do
+      if server == "lua_ls" then
+        lspconfig.lua_ls.setup({
+          on_attach = lsp_attach,
+          capabilities = lsp_capabilities,
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { "vim" },
+              },
+              workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+              },
+            },
           },
-          workspace = {
-            library = vim.api.nvim_get_runtime_file("", true),
-            checkThirdParty = false, 
-          },
-        },
-      },
-    })
-  else
-    lspconfig[server].setup({
-      on_attach = lsp_attach,
-      capabilities = lsp_capabilities,
-    })
-  end
-end
-
-
-    -- for _, server in ipairs(servers) do
-    --   lspconfig[server].setup({
-    --     on_attach = lsp_attach,
-    --     capabilities = lsp_capabilities,
-    --   })
-    -- end
+        })
+      else
+        lspconfig[server].setup({
+          on_attach = lsp_attach,
+          capabilities = lsp_capabilities,
+        })
+      end
+    end
   end
 }

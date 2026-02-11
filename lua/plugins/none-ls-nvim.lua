@@ -11,7 +11,8 @@ return {
       -- SQL (pg_format)
       nls.builtins.formatting.pg_format.with({
         filetypes = { "sql" },
-        args = { "--stdin", "--spaces", "2" },
+        -- args = { "--stdin", "--spaces", "2" },
+        args = { "--spaces", "2" },
       }),
     })
 
