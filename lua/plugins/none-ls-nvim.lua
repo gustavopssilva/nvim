@@ -12,7 +12,9 @@ return {
       nls.builtins.formatting.pg_format.with({
         filetypes = { "sql" },
         -- args = { "--stdin", "--spaces", "2" },
-        args = { "--spaces", "2" },
+        -- args = { "--spaces", "2" },
+            args = { "--spaces", "4", "--keyword-case", "1", "--wrap-limit", "0" }
+
       }),
     })
 

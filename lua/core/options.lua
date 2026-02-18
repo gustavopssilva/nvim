@@ -7,6 +7,7 @@ opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,te
 opt.relativenumber = true
 opt.number = true
 opt.scrolloff = 10 -- Número mínimo de linhas acima e abaixo do cursor
+opt.virtualedit = "onemore" -- para quando acabar as linhas... sera que pega?
 
 -- Abas & Indentação
 opt.tabstop = 2
