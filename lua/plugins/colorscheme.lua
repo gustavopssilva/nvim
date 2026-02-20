@@ -1,5 +1,5 @@
 -- I
--- 
+--
 -- return {
 --   "navarasu/onedark.nvim",
 --   lazy = false,
@@ -10,7 +10,7 @@
 --       transparent = true, -- Habilita fundo transparente
 --       term_colors = true,
 --       ending_tildes = false,
-      
+
 --       highlights = {
 --         -- Comment = { italic = true },
 --         -- Keyword = { bold = true },
@@ -23,7 +23,7 @@
 --   end,
 -- }
 --
-return{
+return {
   "nanotech/jellybeans.vim",
   lazy = false,
   priority = 1000,
@@ -45,7 +45,11 @@ return{
       highlight TelescopeNormal guibg=NONE ctermbg=NONE
       highlight EndOfBuffer guibg=NONE ctermbg=NONE
     ]])
-
+    vim.cmd([[
+  highlight Whitespace guibg=NONE ctermbg=NONE
+  highlight SpecialKey guibg=NONE ctermbg=NONE
+  highlight NonText guibg=NONE ctermbg=NONE
+]])
     -- Estilo
     -- vim.cmd([[
     --   highlight Comment gui=italic
