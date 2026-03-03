@@ -1,3 +1,9 @@
+-- ve se ta instalado: pyright-langserver --version
+-- ou assim: which pyright-langserver
+-- instalar o python: npm install -g pyright
+
+
+
 local lspconfig = require("lspconfig")
 
 -- Diz pro LazyVim usar Pyright como LSP Python
@@ -13,7 +19,8 @@ end
 
 -- Setup do Pyright
 lspconfig.pyright.setup({
-  cmd = { "/home/gustavo/.nvm/versions/node/v22.13.1/bin/pyright-langserver", "--stdio" },
+  cmd = { "pyright-langserver", "--stdio" },
+  -- cmd = { "/home/gustavo/.nvm/versions/node/v22.13.1/bin/pyright-langserver", "--stdio" },
   on_attach = function(client, bufnr)
     -- Desativa formatação pelo LSP (use outro formatador se quiser)
     client.server_capabilities.documentFormattingProvider = false
