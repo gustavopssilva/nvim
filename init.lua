@@ -1,4 +1,7 @@
+vim.env.TREESITTER_PARSER_DIR = vim.fn.stdpath("data") .. "/site/parser"
+-- vim.opt.runtimepath:append("~/.local/share/nvim/site")
 
+-- resto da config abaixo
 vim.deprecate = function() end
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
