@@ -8,6 +8,11 @@ return {
         formatters_by_ft = {
           lua = { "stylua" },
           kotlin = { "ktlint" },
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          json = { "prettier" },
+          markdown = { "prettier" },
+          python = { "black" },
         },
       })
 

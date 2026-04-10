@@ -83,41 +83,6 @@ lspconfig.kotlin_language_server.setup({
 --   cmd = { "kotlin-language-server" },
 -- })
 
--- ===============================
--- Autocompletar com nvim-cmp + LuaSnip
--- ===============================
-local cmp = require("cmp")
-local luasnip = require("luasnip")
-
--- Carregar snippets customizados
-require("luasnip.loaders.from_lua").lazy_load({
-  paths = vim.fn.stdpath("config") .. "/lua/snippets"
-})
-
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  mapping = {
-    ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
-    ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-o>'] = cmp.mapping.complete_common_string(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm(),
-  },
-  sources = {
-    { name = 'luasnip' },
-    { name = 'buffer',   keyword_length = 3 },
-    { name = 'nvim_lsp', max_item_count = 10 },
-  },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-}
+-- Autocompletar configurado globalmente em lua/plugins/nvim-cmp.lua
 
 

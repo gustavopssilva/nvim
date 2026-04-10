@@ -1,11 +1,16 @@
 vim.env.TREESITTER_PARSER_DIR = vim.fn.stdpath("data") .. "/site/parser"
 -- vim.opt.runtimepath:append("~/.local/share/nvim/site")
 
--- resto da config abaixo
-vim.deprecate = function() end
+-- Silencia warnings de deprecação do lspconfig (até migrar pra vim.lsp.config)
+local orig_deprecate = vim.deprecate
+vim.deprecate = function(name, alternative, version, plugin, backtrace)
+  if plugin == "nvim-lspconfig" then return end
+  if orig_deprecate then return orig_deprecate(name, alternative, version, plugin, backtrace) end
+end
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -33,7 +38,4 @@ require("core.options")
 require("core.keymaps")
 
 -- Carrega os snippets personalizados
--- require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets/" })
--- require("luasnip.loaders.From_lua").load({ paths = "./lua/snippets/" })
--- require("luasnip.loaders.from_lua").load({ paths = "./lua/snippets/" })
-require("luasnip.loaders.from_lua").load({ paths = { "./lua/snippets/" } })
+require("luasnip.loaders.from_lua").load({ paths = { vim.fn.stdpath("config") .. "/lua/snippets" } })

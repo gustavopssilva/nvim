@@ -6,17 +6,6 @@
 
 local lspconfig = require("lspconfig")
 
--- Diz pro LazyVim usar Pyright como LSP Python
-vim.g.lazyvim_python_lsp = "pyright"
-
--- Mata qualquer cliente baseado em BasedPyright ativo ou Pyright diferente do caminho definido
-for _, client in pairs(vim.lsp.get_active_clients()) do
-  if client.name == "basedpyright" or
-     (client.name == "pyright" and client.cmd[1] ~= "/home/gustavo/.nvm/versions/node/v22.13.1/bin/pyright-langserver") then
-    client.stop()
-  end
-end
-
 -- Setup do Pyright
 lspconfig.pyright.setup({
   cmd = { "pyright-langserver", "--stdio" },
@@ -34,7 +23,7 @@ lspconfig.pyright.setup({
     vim.keymap.set('n', '<leader>gf', function() vim.lsp.buf.format { async = true } end, opts)
   end,
   capabilities = require("cmp_nvim_lsp").default_capabilities(),
-  root_dir = function() return vim.loop.cwd() end,
+  root_dir = function() return vim.uv.cwd() end,
   settings = {
     python = {
       analysis = {

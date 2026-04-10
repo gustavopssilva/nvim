@@ -38,7 +38,7 @@ return {
 
     -- Carrega snippets do formato VS Code
     require('luasnip.loaders.from_vscode').lazy_load()
-    require('luasnip.loaders.from_lua').load({ paths = { "~/.config/nvim/snippets" } })
+    require('luasnip.loaders.from_lua').load({ paths = { vim.fn.stdpath("config") .. "/lua/snippets" } })
     luasnip.config.setup({})
 
     cmp.setup({
@@ -99,6 +99,14 @@ return {
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
       },
+    })
+
+    -- Autocompletar tabelas/colunas em arquivos SQL via dadbod
+    cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
+      sources = cmp.config.sources({
+        { name = 'vim-dadbod-completion' },
+        { name = 'buffer' },
+      }),
     })
   end,
 }

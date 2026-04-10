@@ -1,4 +1,6 @@
-print("ftplugin/java.lua carregado")
+-- ftplugin/java.lua
+if vim.b._jdtls_loaded then return end
+vim.b._jdtls_loaded = true
 
 -- Configuração do JDTLS (LSP Java)
 local home = vim.env.HOME -- Obtém o diretório home
@@ -27,8 +29,13 @@ local bundles = {
   vim.fn.glob(home .. "/.local/share/nvim/mason/share/java-debug-adapter/com.microsoft.java.debug.plugin.jar"),
 }
 
--- Necessário para rodar/depurar testes unitários
-vim.list_extend(bundles, vim.split(vim.fn.glob(home .. "/.local/share/nvim/mason/share/java-test/*.jar", 1), "\n"))
+-- Necessário para rodar/depurar testes unitários (filtra JARs que não são bundles válidos)
+local test_jars = vim.split(vim.fn.glob(home .. "/.local/share/nvim/mason/share/java-test/*.jar", 1), "\n")
+for _, jar in ipairs(test_jars) do
+  if not vim.endswith(jar, "runner-jar-with-dependencies.jar") and not vim.endswith(jar, "jacocoagent.jar") and jar ~= "" then
+    table.insert(bundles, jar)
+  end
+end
 vim.keymap.set("n", "<Space>tt", function() require('jdtls').test_class() end,
   { desc = "Rodar testes da classe com JDTLS" })
 
@@ -48,8 +55,8 @@ local config = {
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
-    "-Dlog.protocol=true",
-    "-Dlog.level=ALL",
+    "-Dlog.protocol=false",
+    "-Dlog.level=WARN",
     "-javaagent:" .. home .. "/.local/share/nvim/mason/share/jdtls/lombok.jar", -- Usando Lombok
     "-Xmx4g",                                                                   -- Aloca 4GB de memória
     "--add-modules=ALL-SYSTEM",
@@ -169,23 +176,20 @@ local config = {
 
 -- Necessário para depuração
 config["on_attach"] = function(client, bufnr)
-  jdtls.setup_dap({ hotcodereplace = "auto" })        -- Habilita substituição de código durante a execução
-  require("jdtls.dap").setup_dap_main_class_configs() -- Configura as classes principais para depuração
+  jdtls.setup_dap({ hotcodereplace = "auto" })
+  -- Carrega main classes sob demanda pra não travar no attach
+  vim.defer_fn(function()
+    require("jdtls.dap").setup_dap_main_class_configs()
+  end, 3000)
 end
 
 -- Inicia um novo cliente e servidor, ou se conecta a um cliente e servidor existentes com base no `root_dir`.
 jdtls.start_or_attach(config)
 
--- Configuração de destaque de erro na linha inteira
-vim.cmd [[highlight LspDiagnosticsVirtualTextError guibg=none guifg=#FF0000]] -- Erro no texto virtual
-vim.cmd [[highlight LspDiagnosticsUnderlineError guibg=none guifg=#FF0000]]   -- Linha com erro destacada
-
--- Ativa o destaque para erros LSP
-vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,      -- Texto virtual para os erros
-    signs = true,             -- Sinais de erro ao lado
-    underline = true,         -- Sublinhado nos erros
-    update_in_insert = false, -- Não atualizar enquanto digita
-  })(_, result, ctx, config)
-end
+-- Configuração de diagnóstico
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+})

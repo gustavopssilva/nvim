@@ -20,7 +20,7 @@ return {
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
         'jdtls', 'jsonls', 'lemminx', 'marksman',
-        'yamlls', 'ts_ls', 'tailwindcss', 'pyright'
+        'yamlls', 'ts_ls', 'tailwindcss', 'pyright', 'sqls'
       }
     })
 
@@ -42,19 +42,14 @@ return {
       client.server_capabilities.documentRangeFormattingProvider = false
 
 
-      -- Keymaps básicos LSP se for redundante, pode tirar depois 250705
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-      vim.keymap.set('n', '<leader>ga', vim.lsp.buf.code_action, opts)
-      vim.keymap.set('n', '<leader>gf', function() vim.lsp.buf.format { async = true } end, opts)
+      -- Keymaps LSP definidos em core/keymaps.lua
     end
 
 
     local servers = {
       'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
       'jsonls', 'lemminx', 'marksman', 'yamlls',
-      'tailwindcss', 'pyright'
+      'tailwindcss', 'pyright', 'sqls'
     }
 
 
