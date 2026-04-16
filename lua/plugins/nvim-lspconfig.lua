@@ -20,7 +20,7 @@ return {
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
         'jdtls', 'jsonls', 'lemminx', 'marksman',
-        'yamlls', 'ts_ls', 'tailwindcss', 'pyright', 'sqls'
+        'yamlls', 'ts_ls', 'pyright', 'sqls'
       }
     })
 
@@ -49,7 +49,7 @@ return {
     local servers = {
       'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
       'jsonls', 'lemminx', 'marksman', 'yamlls',
-      'tailwindcss', 'pyright', 'sqls'
+      'pyright', 'sqls'
     }
 
 
@@ -77,5 +77,17 @@ return {
         })
       end
     end
+
+    -- TypeScript — setup dedicado com limite de memória
+    lspconfig.ts_ls.setup({
+      on_attach = lsp_attach,
+      capabilities = lsp_capabilities,
+      init_options = {
+        maxTsServerMemory = 4096,
+      },
+      flags = {
+        debounce_text_changes = 300,
+      },
+    })
   end
 }
