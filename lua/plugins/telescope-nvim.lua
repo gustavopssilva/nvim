@@ -33,12 +33,23 @@ return {
         }
       },
     },
+    pickers = {
+      colorscheme = {
+        enable_preview = true,
+        layout_strategy = "center",
+        layout_config = {
+          width = 0.5,
+          height = 0.4,
+        },
+      }
+    },
     extensions = {
       neoclip = {}, -- Ativa o histórico de yank
       -- lsp_handlers = {},     -- deveria ativar os comandos do lsp no telescope...
     }
   },
-  config = function()
+  config = function(_, opts)
+    require('telescope').setup(opts)
     require('telescope').load_extension('neoclip') -- Carrega a extensão
     -- require('telescope').load_extension('lsp_handlers')  -- Carrega a extensão
   end

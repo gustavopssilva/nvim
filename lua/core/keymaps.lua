@@ -104,6 +104,7 @@ keymap.set('n', '<leader>pp', '<cmd>Telescope registers<CR>', { noremap = true, 
 keymap.set('n', '<leader>fb', builtin.buffers, {})                                                       -- busca fuzzy por buffers abertos
 keymap.set('n', '<leader>fh', builtin.help_tags, {})                                                     -- busca fuzzy por tags de ajuda
 keymap.set('n', '<leader>fs', builtin.current_buffer_fuzzy_find, {})                                     -- busca fuzzy no buffer do arquivo atual
+keymap.set('n', '<leader>fc', builtin.colorscheme, {})                                                   -- busca fuzzy por temas com preview
 keymap.set('n', '<leader>fo', builtin.lsp_document_symbols, {})                                          -- busca fuzzy por símbolos no arquivo
 keymap.set('n', '<leader>fi', builtin.lsp_incoming_calls, {})                                            -- busca fuzzy por chamadas LSP/entrada
 keymap.set('n', '<leader>fm', function() builtin.treesitter({ symbols = { 'function', 'method' } }) end) -- busca fuzzy por métodos na classe atual
