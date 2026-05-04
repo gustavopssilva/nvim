@@ -92,12 +92,40 @@ vim.keymap.set({ 'n', 'v' }, '<Left>', '<Nop>', { noremap = true })
 vim.keymap.set({ 'n', 'v' }, '<Right>', '<Nop>', { noremap = true })
 
 
--- Dobramento de código
+-- Dobramento de código (lazy: só ativa em buffers reais, usando o foldexpr nativo do nvim)
 opt.foldlevel = 20
-opt.foldmethod = "expr"
 opt.foldenable = true
 opt.foldlevelstart = 99
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utiliza o Treesitter para dobrar
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  callback = function(args)
+    if vim.bo[args.buf].buftype ~= "" then return end
+    pcall(function()
+      vim.wo.foldmethod = "expr"
+      vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    end)
+  end,
+})
+
+-- Desabilita LSP/treesitter em pastas geradas/vendidas — abrir um arquivo dentro
+-- delas (inclusive via <C-o>) não vai disparar attach pesado nem indexação.
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  callback = function(args)
+    local path = vim.api.nvim_buf_get_name(args.buf)
+    if path:match("/dist/")
+        or path:match("/node_modules/")
+        or path:match("/jspm_packages/")
+        or path:match("/build/")
+        or path:match("/target/")
+        or path:match("/.gradle/") then
+      vim.b[args.buf].large_buf = true
+      vim.diagnostic.enable(false, { bufnr = args.buf })
+      vim.api.nvim_create_autocmd("LspAttach", {
+        buffer = args.buf,
+        callback = function(ev) vim.lsp.buf_detach_client(ev.buf, ev.data.client_id) end,
+      })
+    end
+  end,
+})
 
 -- Movimento das setas
 vim.api.nvim_set_keymap("n", "<C-Down>", "<C-d>", { noremap = true, silent = true })

@@ -104,6 +104,9 @@ keymap.set('n', '<leader>pp', '<cmd>Telescope registers<CR>', { noremap = true, 
 keymap.set('n', '<leader>fb', builtin.buffers, {})                                                       -- busca fuzzy por buffers abertos
 keymap.set('n', '<leader>fh', builtin.help_tags, {})                                                     -- busca fuzzy por tags de ajuda
 keymap.set('n', '<leader>fs', builtin.current_buffer_fuzzy_find, {})                                     -- busca fuzzy no buffer do arquivo atual
+
+keymap.set('n', '<leader>fj', '<cmd>Telescope jumplist<CR>', { noremap = true, silent = true })         -- mostra os jumps que já dei
+keymap.set('n', '<leader>fs', builtin.current_buffer_fuzzy_find, {})                                     -- busca fuzzy no buffer do arquivo atual
 keymap.set('n', '<leader>fc', builtin.colorscheme, {})                                                   -- busca fuzzy por temas com preview
 keymap.set('n', '<leader>fo', builtin.lsp_document_symbols, {})                                          -- busca fuzzy por símbolos no arquivo
 keymap.set('n', '<leader>fi', builtin.lsp_incoming_calls, {})                                            -- busca fuzzy por chamadas LSP/entrada
@@ -140,7 +143,7 @@ keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Executar consulta REST
 -- LSP
 keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
 
-keymap.set('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+keymap.set('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>') -- o mesmo que o *
 -- keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
 
 keymap.set('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')     -- Ir para a declaração

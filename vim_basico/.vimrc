@@ -62,6 +62,9 @@ nnoremap <leader>ww :w<CR>
 " Formatação manual Google Java Format (opcional)
 autocmd FileType java nnoremap <leader>gf :%!java -jar ~/.vim/tools/google-java-format.jar -<CR>
 
+" Snippets --------------------------------------------------------
+autocmd FileType java iabbrev <buffer> sout System.out.println("");<Left><Left><Left>
+
 
 " Programas para instalar----------------------------------------------------------
 "cria a pasta na maquina remota

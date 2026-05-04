@@ -7,8 +7,15 @@ local home = vim.env.HOME -- Obtém o diretório home
 
 
 local jdtls = require("jdtls")
-local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t") -- Obtém o nome do projeto
-local workspace_dir = home .. "/.jdtls-workspace/" .. project_name -- Diretório de trabalho do JDTLS
+-- Resolve o root real do projeto Java a partir do arquivo atual (não do cwd do nvim).
+-- Usar getcwd() criava workspaces duplicados quando o nvim era aberto fora da raiz do projeto.
+local root_dir = require("jdtls.setup").find_root({
+  ".git", "mvnw", "pom.xml",
+  "build.gradle", "build.gradle.kts",
+  "settings.gradle", "settings.gradle.kts", "gradlew",
+})
+local project_name = vim.fn.fnamemodify(root_dir or vim.fn.getcwd(), ":p:h:t")
+local workspace_dir = home .. "/.jdtls-workspace/" .. project_name
 
 local system_os = ""
 
@@ -72,18 +79,8 @@ local config = {
     workspace_dir, -- Diretório de dados do projeto
   },
 
-  -- Um servidor e cliente LSP dedicados serão iniciados por diretório root único
-  -- root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "pom.xml", "build.gradle" }),
-  root_dir = require("jdtls.setup").find_root({
-  ".git",
-  "mvnw",
-  "pom.xml",
-  "build.gradle",
-  "build.gradle.kts",
-  "settings.gradle",
-  "settings.gradle.kts",
-  "gradlew",
-}),
+  -- Reaproveita o root_dir já resolvido acima (mesmo do project_name)
+  root_dir = root_dir,
 
 
   -- Aqui você pode configurar as opções específicas do eclipse.jdt.ls

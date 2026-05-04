@@ -19,18 +19,20 @@ return {
     require('mason-lspconfig').setup({
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
-        'jdtls', 'jsonls', 'lemminx', 'marksman',
+        'jsonls', 'lemminx', 'marksman',
         'yamlls', 'ts_ls', 'pyright', 'sqls'
-      }
+      },
+      -- jdtls é gerenciado pelo nvim-jdtls (ftplugin/java.lua), não pelo mason-lspconfig
+      -- automatic_enable = false impede que servidores instalados via Mason (mas não
+      -- configurados explicitamente abaixo) ataquem buffers automaticamente
+      automatic_enable = false,
     })
 
-    -- Configurar o Mason Tool Installer
+    -- Configurar o Mason Tool Installer (instala sob demanda, sem rodar no startup)
     require('mason-tool-installer').setup({
       ensure_installed = { 'java-debug-adapter', 'java-test', 'ktlint' },
+      run_on_start = false,
     })
-
-    -- Chamar a instalação do Mason Tools manualmente
-    vim.api.nvim_command('MasonToolsInstall')
 
     -- Definir variáveis de configuração LSP
     local lspconfig = require('lspconfig')
