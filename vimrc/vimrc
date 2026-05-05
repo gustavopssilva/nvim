@@ -1,0 +1,465 @@
+" ============================================================================
+" .vimrc minimalista — zero plugins, foco em dev/análise em VM remota
+" Linguagens: Java, SQL, JS, Markdown, HTML, JSON
+" ============================================================================
+"
+" SETUP VM NOVA:
+"   1. Instala os pacotes abaixo.
+"   2. Copia o seu .vimrc para a Home.
+"   3. Abre o projeto Java na raiz e digita :Ctags uma vez.
+"   4. Pronto. Tudo funcionará exatamente como está agora.
+"
+" 1. Instalar pacotes:
+"    Ubuntu: sudo apt update && sudo apt install -y vim-gtk3 universal-ctags ripgrep jq pgformatter
+"    Fedora: sudo dnf install -y vim universal-ctags ripgrep jq
+" 2. Gerar tags (GoTo): No Vim, dentro da raiz do projeto, digite :Ctags
+" 3. Clipboard: Requer vim-gtk3 e conexao via 'ssh -X'
+"
+" FORMATADOR JAVA: 
+"   O seu .vimrc já está configurado para tentar usar o google-java-format via npx (Node.js).
+" Se a VM não tiver Node, você pode baixar o JAR manualmente com o comando que deixamos no topo do seu .vimrc.
+" Tenta via npx automaticamente. Para instalar o JAR fixo (se nao tiver Node):
+" mkdir -p ~/.vim/tools && curl -L -o ~/.vim/tools/google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.22.0/google-java-format-1.22.0-all-deps.jar
+"
+" FORMATADOR SQL:
+" sudo curl -o /usr/local/bin/pg_format https://raw.githubusercontent.com/darold/pgFormatter/master/pg_format && sudo chmod +x /usr/local/bin/pg_format
+" ============================================================================
+
+" ============================================================================
+" Opções básicas
+" ============================================================================
+set nocompatible
+syntax on
+filetype plugin indent on
+
+let mapleader = " "
+
+" Sessões / números / scroll
+set sessionoptions=blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions
+set relativenumber
+set number
+set scrolloff=10
+set cursorline
+set hidden                " permite trocar de buffer sem salvar; essencial para Netrw
+set shortmess+=atI        " Silencia mensagens de 'pressione enter' e introdução
+set lazyredraw            " Melhora performance e evita flickers em scripts
+set noshowmode            " Não mostra '-- INSERT --' (já está na statusline)
+
+" Indentação
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set smarttab
+set autoindent
+
+" Busca
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set wildignorecase        " Ignora maiúsculas/minúsculas na busca de arquivos (:find)
+
+" UI
+set wrap!                 " sem quebra (markdown sobrescreve)
+set termguicolors
+set background=dark
+set signcolumn=auto
+set showmode
+set showcmd
+set laststatus=2
+set splitright
+set splitbelow
+set mouse=a
+set autoread
+
+" Edição
+set backspace=indent,eol,start
+set clipboard=unnamedplus  " Integração com clipboard do sistema
+set nobackup
+set nowritebackup
+set noswapfile
+
+" Iskeyword inclui _ e -
+set iskeyword+=_
+set iskeyword+=-
+
+" Folding por syntax (vim não tem treesitter)
+set foldmethod=syntax
+set foldlevel=20
+set foldlevelstart=99
+set foldenable
+
+" :find busca recursivo a partir do cwd
+set path=.,**
+set tags=./tags,tags;$HOME
+
+" Wildmenu com fuzzy (Vim 9+); em vim 8 cai no prefix-match silenciosamente
+set wildmenu
+set wildmode=longest:full,full
+silent! set wildoptions=pum,fuzzy
+set wildignore+=*/node_modules/*,*/target/*,*/build/*,*/dist/*,*/.git/*,*.class,*.jar,*.swp,*.zip,*.tar.gz,tags
+
+" :grep usa ripgrep se existir
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --glob=!.git\ --glob=!tags
+  set grepformat=%f:%l:%c:%m
+endif
+
+" Tags geradas por ctags (rode `ctags -R` na raiz do projeto)
+set tags=./tags;,tags;
+
+" ============================================================================
+" Tema
+" ============================================================================
+" retrobox parece com gruvbox e vem no Vim 9.1+; fallback pra habamax (9.0+)
+" e slate (built-in antigo).
+silent! colorscheme retrobox
+if !exists('g:colors_name') || g:colors_name == ''
+  silent! colorscheme habamax
+endif
+if !exists('g:colors_name') || g:colors_name == ''
+  silent! colorscheme slate
+endif
+
+" Highlight da palavra com */# (não pula pra próxima ocorrência)
+nnoremap <silent> * :let @/='\V\<'.escape(expand('<cword>'), '/\').'\>'<CR>:set hlsearch<CR>
+nnoremap <silent> # :let @/='\V\<'.escape(expand('<cword>'), '/\').'\>'<CR>:set hlsearch<CR>
+nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
+
+" ============================================================================
+" Statusline custom (substituto do airline)
+" ============================================================================
+set statusline=
+set statusline+=\ %f                     " caminho relativo
+set statusline+=\ %m%r%h%w               " modificado/readonly/help/preview
+set statusline+=%=                       " alinha à direita
+set statusline+=\ %y                     " filetype
+set statusline+=\ [%{&fenc!=''?&fenc:&enc}]
+set statusline+=\ %p%%                   " porcentagem
+set statusline+=\ %l:%c\                 " linha:coluna
+
+" ============================================================================
+" ============================================================================
+" Netrw como explorador (estilo NERDTree)
+" ============================================================================
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3        " modo árvore
+let g:netrw_winsize = 25
+let g:netrw_browse_split = 4     " abre na janela anterior (editor)
+let g:netrw_altv = 1             " splits verticais à direita
+let g:netrw_keepdir = 0
+let g:netrw_fastbrowse = 2
+let g:netrw_silent = 1
+
+" Ícones minimalistas (beautify manual)
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+' " esconde ocultos
+let g:netrw_localcopydircmd = 'cp -r'
+
+" Limpa buffers de diretório ao sair para não sujar o :ls
+autocmd FileType netrw setlocal bufhidden=wipe
+
+" Atalhos dentro do Netrw
+augroup netrw_mappings
+  autocmd!
+  autocmd FileType netrw nmap <buffer> o <CR>
+  autocmd FileType netrw nmap <buffer> i <CR>
+  " 'v' abre em split vertical à direita e mantém o foco
+  autocmd FileType netrw nmap <buffer> v :let g:netrw_browse_split=2<CR><CR>:let g:netrw_browse_split=4<CR>
+  " FIX: Mapeia o Enter para ajustar o split e DEPOIS chamar a função nativa do Netrw
+  autocmd FileType netrw nnoremap <buffer> <silent> <CR> :call NetrwOpenVertical()<CR><Plug>NetrwLocalBrowseCheck
+augroup END
+
+" Forçar abertura vertical à direita se o editor for a única janela
+function! NetrwOpenVertical()
+  if winnr('$') == 1
+    let g:netrw_browse_split = 2
+  else
+    let g:netrw_browse_split = 4
+  endif
+endfunction
+
+nnoremap <silent> <C-q> :topleft Lexplore<CR>
+nnoremap <leader>er :topleft Lexplore<CR>
+" <leader>ef: Abre o explorer e busca o nome do arquivo atual na árvore
+nnoremap <leader>ef :topleft Lexplore<CR>/<C-R>=expand('%:t')<CR><CR>
+
+" ============================================================================
+" Harpoon Minimalista (estilo Neovim, sem plugins)
+" ============================================================================
+let g:harpoon_files = []
+
+function! HarpoonAdd()
+  let l:file = expand('%:p')
+  if index(g:harpoon_files, l:file) == -1
+    call add(g:harpoon_files, l:file)
+    echo "📌 Adicionado ao Harpoon: " . expand('%:t')
+  endif
+endfunction
+
+function! HarpoonShow()
+  let l:display = []
+  let l:i = 1
+  for f in g:harpoon_files
+    call add(l:display, l:i . ": " . fnamemodify(f, ':t'))
+    let l:i += 1
+  endfor
+  let l:choice = inputlist(['--- HARPOON ---'] + l:display)
+  if l:choice > 0 && l:choice <= len(g:harpoon_files)
+    execute 'edit ' . g:harpoon_files[l:choice-1]
+  endif
+endfunction
+
+function! HarpoonNav(idx)
+  if a:idx <= len(g:harpoon_files)
+    execute 'edit ' . g:harpoon_files[a:idx-1]
+  endif
+endfunction
+
+nnoremap <leader>ha :call HarpoonAdd()<CR>
+nnoremap <leader>hh :call HarpoonShow()<CR>
+nnoremap <leader>h1 :call HarpoonNav(1)<CR>
+nnoremap <leader>h2 :call HarpoonNav(2)<CR>
+nnoremap <leader>h3 :call HarpoonNav(3)<CR>
+nnoremap <leader>h4 :call HarpoonNav(4)<CR>
+
+" ============================================================================
+" Atalhos gerais (espelhados do nvim)
+" ============================================================================
+" Sair / salvar
+nnoremap <leader>qa :qa<CR>
+nnoremap <leader>qq :q<CR>
+nnoremap <leader>wq :wq!<CR>
+nnoremap <leader>ww :w!<CR>
+
+" Go To Definition (Padrão Neovim)
+nnoremap <leader>gd <C-]>
+nnoremap <leader>gr g<C-]>
+nnoremap <leader>gi <C-]>
+" <C-t> para voltar já é nativo
+
+
+" Abrir URL sob o cursor (precisa xdg-open ou open)
+if executable('xdg-open')
+  nnoremap gx :!xdg-open <c-r><c-a><CR>
+endif
+
+" Janelas divididas
+nnoremap <leader>sv <C-w>v
+nnoremap <leader>ss <C-w>s
+nnoremap <leader>se <C-w>=
+nnoremap <leader>sx :close<CR>
+nnoremap <leader>sh <C-w>h
+nnoremap <leader>sj <C-w>j
+nnoremap <leader>sk <C-w>k
+nnoremap <leader>sl <C-w>l
+nnoremap <leader>sw <C-w><5
+
+" Buffers
+nnoremap <leader>bn :bnext<CR>
+nnoremap <leader>bp :bprev<CR>
+nnoremap <leader>bl :buffers<CR>
+nnoremap <leader>bc :buffer<space>
+
+" Abas
+nnoremap <leader>to :tabnew<CR>
+nnoremap <leader>tx :tabclose<CR>
+nnoremap <leader>tn :tabn<CR>
+nnoremap <leader>tp :tabp<CR>
+
+" Diff
+nnoremap <leader>cc :diffput<CR>
+nnoremap <leader>cj :diffget 1<CR>
+nnoremap <leader>ck :diffget 3<CR>
+nnoremap <leader>cn ]c
+nnoremap <leader>cp [c
+
+" Quickfix
+nnoremap <leader>qo :copen<CR>
+nnoremap <leader>qf :cfirst<CR>
+nnoremap <leader>qn :cnext<CR>
+nnoremap <leader>qp :cprev<CR>
+nnoremap <leader>ql :clast<CR>
+nnoremap <leader>qc :cclose<CR>
+
+" Terminal em split (precisa Vim 8.1+)
+nnoremap <leader>sth :split<CR>:terminal<CR>
+nnoremap <leader>stv :vsplit<CR>:terminal<CR>
+tnoremap <Esc> <C-\><C-n>
+
+" Find / Grep (substituem fzf:Files e fzf:Rg)
+" Use Tab para navegar nos resultados após o Ctrl+p
+nnoremap <C-p> :find 
+nnoremap <leader>fg :Rg<space>
+
+" Wrapper :Rg que joga resultado pro quickfix
+function! s:Grep(args) abort
+  execute 'silent! grep! ' . a:args
+  if !empty(getqflist())
+    copen
+  endif
+  redraw!
+endfunction
+command! -nargs=+ Rg call <SID>Grep(<q-args>)
+
+" Movimento das setas grandes
+nnoremap <C-Down> <C-d>
+nnoremap <C-Up> <C-u>
+
+" Mover linha/bloco com Alt + setas
+nnoremap <A-Down> :move .+1<CR>==
+nnoremap <A-Up> :move .-2<CR>==
+xnoremap <A-Down> :move '>+1<CR>gv=gv
+xnoremap <A-Up> :move '<-2<CR>gv=gv
+
+" Duplicar linha/bloco com Alt+Shift+setas
+nnoremap <A-S-Down> :copy .<CR>==j
+nnoremap <A-S-Up> :copy .-1<CR>==k
+xnoremap <A-S-Down> :copy '>+1<CR>gv=gv
+xnoremap <A-S-Up> :copy '<-2<CR>gv=gv
+
+" Desativa setas em normal/visual (forçar hjkl, igual nvim)
+for s:k in ['<Up>', '<Down>', '<Left>', '<Right>']
+  execute 'nnoremap ' . s:k . ' <Nop>'
+  execute 'vnoremap ' . s:k . ' <Nop>'
+endfor
+
+" ============================================================================
+" Navegação por símbolo via ctags + omnifunc nativo
+" ============================================================================
+" Ctrl-]   → vai pra definição (precisa de `ctags -R` na raiz)
+" Ctrl-t   → volta
+" Ctrl-x Ctrl-o → omnicompletion (LSP do pobre)
+" Ctrl-x Ctrl-f → completar caminho de arquivo
+" Ctrl-n / Ctrl-p → completar palavra do buffer
+" K        → procura keyword (man/help)
+" gf       → vai pro arquivo sob o cursor (segue 'path')
+
+" Atalho rápido pra (re)gerar tags
+command! Ctags !ctags -R --exclude=node_modules --exclude=target --exclude=build --exclude=dist --exclude=.git .
+
+" ============================================================================
+" Funções de Formatação Segura (não apaga código se houver erro)
+" ============================================================================
+function! SafeFormat(cmd, success_msg)
+  let l:view = winsaveview()
+  let l:tmpfile = tempname() . '.' . expand('%:e')
+  call writefile(getline(1, '$'), l:tmpfile)
+  
+  " npm_config_loglevel=warn reduz a sujeira do npx no terminal
+  let l:real_cmd = "env npm_config_yes=true npm_config_loglevel=warn " . substitute(a:cmd, '%', l:tmpfile, 'g') . " 2>&1"
+  let l:output = system(l:real_cmd)
+  
+  if v:shell_error == 0
+    execute "normal! gg\"_dG"
+    call setline(1, split(l:output, "\n"))
+    redraw | echo "✨ " . a:success_msg
+  else
+    let l:err_lines = split(l:output, "\n")
+    let l:short_err = len(l:err_lines) > 0 ? l:err_lines[0] : "Erro desconhecido"
+    let l:short_err = substitute(l:short_err, '^.\{-}:', 'Linha ', '')
+    redraw | echohl ErrorMsg | echo "❌ " . l:short_err | echohl None
+  endif
+  
+  call delete(l:tmpfile)
+  call winrestview(l:view)
+endfunction
+
+" ============================================================================
+" Per-filetype: omnifunc + format + snippets via iabbrev
+" ============================================================================
+
+" --- Java -------------------------------------------------------------------
+augroup ft_java
+  autocmd!
+  autocmd FileType java setlocal omnifunc=javacomplete#Complete
+  
+  let s:j_cmd = filereadable(expand("~/.vim/tools/google-java-format.jar")) 
+        \ ? "java -jar ~/.vim/tools/google-java-format.jar %" 
+        \ : "npx --yes google-java-format %"
+
+  execute 'autocmd FileType java nnoremap <buffer> <leader>gf :call SafeFormat("' . s:j_cmd . '", "Java formatado")<CR>'
+  autocmd BufWritePre *.java call SafeFormat(s:j_cmd, "Java formatado")
+  
+  " Snippets básicos
+  autocmd FileType java iabbrev <buffer> sout System.out.println("");<Left><Left><Left>
+  autocmd FileType java iabbrev <buffer> syso System.out.println("");<Left><Left><Left>
+  autocmd FileType java iabbrev <buffer> psvm public static void main(String[] args) {<CR>}<Up><End>
+  
+  " Gerar tags se não existirem ao abrir, ou atualizar ao salvar
+  autocmd FileType java if empty(tagfiles()) | silent! !ctags -R --exclude=node_modules --exclude=target --exclude=.git . > /dev/null 2>&1 & | redraw! | endif
+  autocmd BufWritePost *.java silent! !ctags -R --exclude=node_modules --exclude=target --exclude=.git . > /dev/null 2>&1 & | redraw!
+augroup END
+
+" --- JavaScript -------------------------------------------------------------
+augroup ft_javascript
+  autocmd!
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType javascript nnoremap <buffer> <leader>gf 
+        \ :call SafeFormat("npx --yes prettier %", "JS formatado")<CR>
+  autocmd FileType javascript iabbrev <buffer> clog console.log();<Left><Left>
+  autocmd FileType javascript iabbrev <buffer> fne function () {<CR>}<Up><End>
+augroup END
+
+" --- SQL --------------------------------------------------------------------
+augroup ft_sql
+  autocmd!
+  autocmd BufRead,BufNewFile *.sql setfiletype sql
+  autocmd FileType sql setlocal omnifunc=sqlcomplete#Complete
+  autocmd FileType sql nnoremap <buffer> <leader>gf 
+        \ :call SafeFormat("pg_format --spaces 4 --keyword-case 1 --wrap-limit 0 %", "SQL formatado")<CR>
+augroup END
+
+" --- Markdown ---------------------------------------------------------------
+augroup ft_markdown
+  autocmd!
+  autocmd FileType markdown setlocal wrap breakindent linebreak spell spelllang=pt_br,en
+  autocmd FileType markdown nnoremap <buffer> j gj
+  autocmd FileType markdown nnoremap <buffer> k gk
+  autocmd FileType markdown nnoremap <buffer> <leader>gf 
+        \ :call SafeFormat("npx --yes prettier %", "Markdown formatado")<CR>
+augroup END
+
+" --- HTML -------------------------------------------------------------------
+augroup ft_html
+  autocmd!
+  autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType html nnoremap <buffer> <leader>gf 
+        \ :call SafeFormat("npx --yes prettier %", "HTML formatado")<CR>
+augroup END
+
+" --- CSS --------------------------------------------------------------------
+augroup ft_css
+  autocmd!
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+augroup END
+
+" --- JSON -------------------------------------------------------------------
+augroup ft_json
+  autocmd!
+  autocmd BufRead,BufNewFile *.json setfiletype json
+  autocmd FileType json nnoremap <buffer> <leader>gf 
+        \ :call SafeFormat("jq . %", "JSON formatado")<CR>
+augroup END
+
+" ============================================================================
+" Cheatsheet rápido (estilo Neovim)
+" ============================================================================
+" :find <Tab>          fuzzy file-finder nativo (vim 9+)
+" <C-p>                idem (atalho)
+" :Rg <termo>          live grep com ripgrep -> quickfix
+" <leader>fg           idem
+" <leader>gd           go-to-definition (ctags)
+" <leader>gr           lista definições/referências
+" <C-t>                volta do jump
+" <C-x><C-o>           omnicompletion (LSP do pobre)
+" <leader>ha           Harpoon: adicionar arquivo
+" <leader>hh           Harpoon: menu de arquivos
+" <leader>h1..4        Harpoon: salto direto
+" <leader>gf           Formatar arquivo (Java, SQL, JSON, JS)
+" <C-q>                Toggle Netrw lateral (estilo NERDTree)
+" <leader>ef           Find File (busca arquivo atual no Netrw)
+"
+" DICA CLIPBOARD: 'y' copia para o clipboard do sistema (unnamedplus)
+" Requisito: vim --version | grep +clipboard
+" ============================================================================

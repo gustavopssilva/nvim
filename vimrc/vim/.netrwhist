@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/home/gps2/.config/nvim/vimrc'
+let g:netrw_dirhist_9='/home/gps2/pessoal/projetos/authentication-ms'
+let g:netrw_dirhist_8='/home/gps2/pessoal/projetos/authentication-ms/src/main/java/com/ajudaqui/authenticationms/controller'
+let g:netrw_dirhist_7='/home/gps2/pessoal/projetos/authentication-ms/src/main/java/com/ajudaqui/authenticationms'
+let g:netrw_dirhist_6='/home/gps2/pessoal/projetos/authentication-ms/src/main/java/com/ajudaqui'
+let g:netrw_dirhist_5='/home/gps2/pessoal/projetos/authentication-ms/src/main/java/com'
+let g:netrw_dirhist_4='/home/gps2/pessoal/projetos/authentication-ms/src/main/java'
+let g:netrw_dirhist_3='/home/gps2/pessoal/projetos/authentication-ms/src/main'
+let g:netrw_dirhist_2='/home/gps2/pessoal/projetos/authentication-ms/src'
+let g:netrw_dirhist_1='/home/gps2/pessoal/projetos/authentication-ms'
