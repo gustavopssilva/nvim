@@ -15,6 +15,11 @@
 " 2. Gerar tags (GoTo): No Vim, dentro da raiz do projeto, digite :Ctags
 " 3. Clipboard: Requer vim-gtk3 e conexao via 'ssh -X'
 "
+"  Se quiser instalar o Java (Necessário para o formatador):
+"   sudo apt update && sudo apt install -y openjdk-17-jdk
+
+"  Se quiser Instalar Node.js (Opcional, se quiser o fallback do npx):
+"     sudo apt install -y nodejs npm
 " FORMATADOR JAVA: 
 "   O seu .vimrc já está configurado para tentar usar o google-java-format via npx (Node.js).
 " Se a VM não tiver Node, você pode baixar o JAR manualmente com o comando que deixamos no topo do seu .vimrc.
@@ -61,11 +66,10 @@ set hlsearch
 set wildignorecase        " Ignora maiúsculas/minúsculas na busca de arquivos (:find)
 
 " UI
-set wrap!                 " sem quebra (markdown sobrescreve)
+set nowrap                " sem quebra (markdown sobrescreve)
 set termguicolors
 set background=dark
 set signcolumn=auto
-set showmode
 set showcmd
 set laststatus=2
 set splitright
@@ -92,7 +96,6 @@ set foldenable
 
 " :find busca recursivo a partir do cwd
 set path=.,**
-set tags=./tags,tags;$HOME
 
 " Wildmenu com fuzzy (Vim 9+); em vim 8 cai no prefix-match silenciosamente
 set wildmenu
@@ -224,6 +227,32 @@ nnoremap <leader>h3 :call HarpoonNav(3)<CR>
 nnoremap <leader>h4 :call HarpoonNav(4)<CR>
 
 " ============================================================================
+" Comentários nativos (gcc e gc) - Sem plugins
+" ============================================================================
+function! ToggleComment() range
+  let l:cms = split(&commentstring, '%s')
+  let l:pre = substitute(l:cms[0], '^\s*\|\s*$', '', 'g')
+  let l:suf = len(l:cms) > 1 ? substitute(l:cms[1], '^\s*\|\s*$', '', 'g') : ""
+  
+  " Verifica se a primeira linha do range já está comentada
+  let l:is_commented = getline(a:firstline) =~ '^\s*' . escape(l:pre, '*/')
+
+  if l:is_commented
+    " Descomentar
+    let l:pattern = '^\(\s*\)' . escape(l:pre, '*/') . '\s*\(.*\)' . (l:suf != "" ? '\s*' . escape(l:suf, '*/') : "") . '\s*$'
+    execute a:firstline . ',' . a:lastline . 's#' . l:pattern . '#\1\2#e'
+  else
+    " Comentar
+    let l:pattern = '^\(\s*\)\(.*\)$'
+    let l:replace = '\1' . l:pre . ' \2' . (l:suf != "" ? " " . l:suf : "")
+    execute a:firstline . ',' . a:lastline . 's#' . l:pattern . '#' . l:replace . '#e'
+  endif
+endfunction
+
+nnoremap <silent> gcc :call ToggleComment()<CR>
+vnoremap <silent> gc :call ToggleComment()<CR>
+
+" ============================================================================
 " Atalhos gerais (espelhados do nvim)
 " ============================================================================
 " Sair / salvar
@@ -235,7 +264,7 @@ nnoremap <leader>ww :w!<CR>
 " Go To Definition (Padrão Neovim)
 nnoremap <leader>gd <C-]>
 nnoremap <leader>gr g<C-]>
-nnoremap <leader>gi <C-]>
+nnoremap <leader>gi g<C-]>
 " <C-t> para voltar já é nativo
 
 
@@ -383,12 +412,10 @@ augroup ft_java
   
   " Snippets básicos
   autocmd FileType java iabbrev <buffer> sout System.out.println("");<Left><Left><Left>
-  autocmd FileType java iabbrev <buffer> syso System.out.println("");<Left><Left><Left>
   autocmd FileType java iabbrev <buffer> psvm public static void main(String[] args) {<CR>}<Up><End>
   
-  " Gerar tags se não existirem ao abrir, ou atualizar ao salvar
-  autocmd FileType java if empty(tagfiles()) | silent! !ctags -R --exclude=node_modules --exclude=target --exclude=.git . > /dev/null 2>&1 & | redraw! | endif
-  autocmd BufWritePost *.java silent! !ctags -R --exclude=node_modules --exclude=target --exclude=.git . > /dev/null 2>&1 & | redraw!
+  " Gerar tags se não existirem ao abrir (atualização manual via :Ctags)
+  autocmd FileType java if executable('ctags') && empty(tagfiles()) | silent! !ctags -R --exclude=node_modules --exclude=target --exclude=.git . > /dev/null 2>&1 & | redraw! | endif
 augroup END
 
 " --- JavaScript -------------------------------------------------------------
@@ -404,7 +431,6 @@ augroup END
 " --- SQL --------------------------------------------------------------------
 augroup ft_sql
   autocmd!
-  autocmd BufRead,BufNewFile *.sql setfiletype sql
   autocmd FileType sql setlocal omnifunc=sqlcomplete#Complete
   autocmd FileType sql nnoremap <buffer> <leader>gf 
         \ :call SafeFormat("pg_format --spaces 4 --keyword-case 1 --wrap-limit 0 %", "SQL formatado")<CR>
@@ -437,9 +463,7 @@ augroup END
 " --- JSON -------------------------------------------------------------------
 augroup ft_json
   autocmd!
-  autocmd BufRead,BufNewFile *.json setfiletype json
-  autocmd FileType json nnoremap <buffer> <leader>gf 
-        \ :call SafeFormat("jq . %", "JSON formatado")<CR>
+  autocmd FileType json nnoremap <buffer> <leader>gf :call SafeFormat("jq . %", "JSON formatado")<CR>
 augroup END
 
 " ============================================================================
