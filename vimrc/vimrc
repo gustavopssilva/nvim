@@ -368,6 +368,39 @@ endfor
 command! Ctags !ctags -R --exclude=node_modules --exclude=target --exclude=build --exclude=dist --exclude=.git .
 
 " ============================================================================
+" Autocompletion automática (popup enquanto digita) — sem plugin
+" ============================================================================
+" Usa <C-n> nativo (palavras do buffer + outros buffers carregados).
+" Limitação: completa por prefixo, sem fuzzy; sem método de classe Java.
+" Pra desligar no boot:    let g:auto_popup = 0  (antes do autocmd carregar)
+" Pra desligar na sessão:  :let g:auto_popup = 0
+let g:auto_popup = get(g:, 'auto_popup', 1)
+
+" menuone: mostra popup mesmo com 1 match. noinsert/noselect: não escolhe sozinho.
+set completeopt=menuone,noinsert,noselect
+set shortmess+=c
+set pumheight=5           " máximo de 5 itens visíveis no popup (scroll no resto)
+
+augroup AutoCompletePopup
+  autocmd!
+  autocmd InsertCharPre * call s:AutoComplete()
+augroup END
+
+function! s:AutoComplete() abort
+  if !g:auto_popup | return | endif
+  if pumvisible() | return | endif
+  " Só dispara quando o char atual e o anterior são 'palavra'
+  " (evita popup ruidoso em espaço, símbolo ou início de palavra)
+  if v:char =~ '\k' && getline('.')[col('.')-2] =~ '\k'
+    call feedkeys("\<C-n>", 'n')
+  endif
+endfunction
+
+" Tab/S-Tab navegam o popup; <C-y> aceita (Enter fica livre pros iabbrev)
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" ============================================================================
 " Funções de Formatação Segura (não apaga código se houver erro)
 " ============================================================================
 function! SafeFormat(cmd, success_msg)
@@ -398,10 +431,44 @@ endfunction
 " Per-filetype: omnifunc + format + snippets via iabbrev
 " ============================================================================
 
+" --- Java: dicionário de keywords (popup mostra mesmo sem ter no buffer) ----
+" Gerado em ~/.vim/dict/java.txt no primeiro boot. Edite livremente — só
+" recria se não existir.
+let s:java_dict_file = expand('~/.vim/dict/java.txt')
+if !filereadable(s:java_dict_file)
+  call mkdir(fnamemodify(s:java_dict_file, ':h'), 'p')
+  call writefile([
+        \ 'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch',
+        \ 'char', 'class', 'const', 'continue', 'default', 'do', 'double',
+        \ 'else', 'enum', 'extends', 'final', 'finally', 'float', 'for',
+        \ 'goto', 'if', 'implements', 'import', 'instanceof', 'int',
+        \ 'interface', 'long', 'native', 'new', 'package', 'private',
+        \ 'protected', 'public', 'return', 'short', 'static', 'strictfp',
+        \ 'super', 'switch', 'synchronized', 'this', 'throw', 'throws',
+        \ 'transient', 'try', 'void', 'volatile', 'while', 'true', 'false',
+        \ 'null', 'var', 'record', 'sealed', 'permits', 'yield',
+        \ 'String', 'Integer', 'Long', 'Double', 'Float', 'Boolean',
+        \ 'Character', 'Byte', 'Short', 'Object', 'Number', 'Math', 'System',
+        \ 'Thread', 'Exception', 'RuntimeException', 'IllegalArgumentException',
+        \ 'NullPointerException', 'IndexOutOfBoundsException', 'IOException',
+        \ 'List', 'ArrayList', 'LinkedList', 'Map', 'HashMap', 'LinkedHashMap',
+        \ 'TreeMap', 'Set', 'HashSet', 'TreeSet', 'Collection', 'Collections',
+        \ 'Arrays', 'Iterator', 'Iterable', 'Comparable', 'Comparator',
+        \ 'Optional', 'Stream', 'StringBuilder', 'StringBuffer',
+        \ 'toString', 'equals', 'hashCode', 'compareTo', 'length', 'size',
+        \ 'isEmpty', 'contains', 'indexOf', 'forEach', 'stream', 'filter',
+        \ 'map', 'collect', 'orElse', 'ifPresent',
+        \ 'Override', 'Deprecated', 'SuppressWarnings', 'FunctionalInterface',
+        \ 'Test', 'BeforeEach', 'AfterEach', 'BeforeAll', 'AfterAll',
+        \ ], s:java_dict_file)
+endif
+
 " --- Java -------------------------------------------------------------------
 augroup ft_java
   autocmd!
   autocmd FileType java setlocal omnifunc=javacomplete#Complete
+  execute 'autocmd FileType java setlocal dictionary+=' . s:java_dict_file
+  autocmd FileType java setlocal complete+=k
   
   let s:j_cmd = filereadable(expand("~/.vim/tools/google-java-format.jar")) 
         \ ? "java -jar ~/.vim/tools/google-java-format.jar %" 
@@ -428,11 +495,57 @@ augroup ft_javascript
   autocmd FileType javascript iabbrev <buffer> fne function () {<CR>}<Up><End>
 augroup END
 
+" --- SQL: dicionário de keywords (popup mostra mesmo sem ter no buffer) -----
+" Gerado em ~/.vim/dict/sql.txt no primeiro boot. Edite livremente — só
+" recria se não existir.
+let s:sql_dict_file = expand('~/.vim/dict/sql.txt')
+if !filereadable(s:sql_dict_file)
+  call mkdir(fnamemodify(s:sql_dict_file, ':h'), 'p')
+  call writefile([
+        \ 'SELECT', 'FROM', 'WHERE', 'INSERT', 'INTO', 'VALUES', 'UPDATE',
+        \ 'SET', 'DELETE', 'TRUNCATE',
+        \ 'CREATE', 'ALTER', 'DROP', 'TABLE', 'VIEW', 'INDEX', 'SEQUENCE',
+        \ 'SCHEMA', 'DATABASE', 'FUNCTION', 'PROCEDURE', 'TRIGGER',
+        \ 'CONSTRAINT', 'COLUMN',
+        \ 'PRIMARY', 'KEY', 'FOREIGN', 'REFERENCES', 'UNIQUE', 'CHECK',
+        \ 'DEFAULT', 'NOT', 'NULL',
+        \ 'INNER', 'LEFT', 'RIGHT', 'FULL', 'OUTER', 'CROSS', 'NATURAL',
+        \ 'JOIN', 'ON', 'USING',
+        \ 'GROUP', 'BY', 'ORDER', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT',
+        \ 'UNION', 'INTERSECT', 'EXCEPT', 'ALL', 'ANY', 'SOME', 'AS',
+        \ 'AND', 'OR', 'IN', 'EXISTS', 'BETWEEN', 'LIKE', 'ILIKE', 'IS',
+        \ 'TRUE', 'FALSE', 'UNKNOWN',
+        \ 'CASE', 'WHEN', 'THEN', 'ELSE', 'END',
+        \ 'WITH', 'RECURSIVE', 'RETURNING',
+        \ 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'COALESCE', 'NULLIF',
+        \ 'GREATEST', 'LEAST',
+        \ 'CAST', 'CONVERT', 'EXTRACT', 'SUBSTRING', 'TRIM', 'UPPER',
+        \ 'LOWER', 'LENGTH', 'CONCAT', 'REPLACE', 'POSITION',
+        \ 'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LEAD', 'LAG', 'OVER',
+        \ 'PARTITION',
+        \ 'INTEGER', 'INT', 'BIGINT', 'SMALLINT', 'NUMERIC', 'DECIMAL',
+        \ 'REAL', 'DOUBLE', 'PRECISION', 'FLOAT',
+        \ 'VARCHAR', 'CHAR', 'TEXT', 'DATE', 'TIME', 'TIMESTAMP',
+        \ 'INTERVAL', 'BOOLEAN', 'BYTEA', 'JSON', 'JSONB', 'UUID',
+        \ 'SERIAL', 'BIGSERIAL',
+        \ 'BEGIN', 'COMMIT', 'ROLLBACK', 'SAVEPOINT', 'TRANSACTION',
+        \ 'GRANT', 'REVOKE', 'ROLE', 'USER',
+        \ 'ASC', 'DESC', 'NULLS', 'FIRST', 'LAST',
+        \ 'CONFLICT', 'DO', 'NOTHING', 'EXCLUDED',
+        \ 'IF', 'ELSIF', 'LOOP', 'FOR', 'WHILE', 'DECLARE', 'RAISE',
+        \ 'NOTICE', 'EXCEPTION', 'LANGUAGE', 'RETURNS', 'RETURN',
+        \ ], s:sql_dict_file)
+endif
+
 " --- SQL --------------------------------------------------------------------
 augroup ft_sql
   autocmd!
   autocmd FileType sql setlocal omnifunc=sqlcomplete#Complete
-  autocmd FileType sql nnoremap <buffer> <leader>gf 
+  execute 'autocmd FileType sql setlocal dictionary+=' . s:sql_dict_file
+  autocmd FileType sql setlocal complete+=k
+  " infercase: digitando 'sel', completa como 'select' (case do prefixo)
+  autocmd FileType sql setlocal infercase
+  autocmd FileType sql nnoremap <buffer> <leader>gf
         \ :call SafeFormat("pg_format --spaces 4 --keyword-case 1 --wrap-limit 0 %", "SQL formatado")<CR>
 augroup END
 
@@ -477,6 +590,8 @@ augroup END
 " <leader>gr           lista definições/referências
 " <C-t>                volta do jump
 " <C-x><C-o>           omnicompletion (LSP do pobre)
+" <Tab> / <S-Tab>      navega no popup de autocomplete (quando aberto)
+" :let g:auto_popup=0  desliga o popup automático na sessão
 " <leader>ha           Harpoon: adicionar arquivo
 " <leader>hh           Harpoon: menu de arquivos
 " <leader>h1..4        Harpoon: salto direto

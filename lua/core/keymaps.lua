@@ -179,7 +179,9 @@ vim.keymap.set('n', '<Leader>B', function()                              -- Defi
   dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
 end)
 
+-- meus, sera que vai??
 
+keymap.set("n", "<leader>path", ":let @+ = expand('%:p')")     -- Copia o path da raiz ate aqui
 
 -- Organizar imports no Java
 keymap.set("n", "<leader>go", function()

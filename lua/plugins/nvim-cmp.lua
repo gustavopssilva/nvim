@@ -101,12 +101,5 @@ return {
       },
     })
 
-    -- Autocompletar tabelas/colunas em arquivos SQL via dadbod
-    cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
-      sources = cmp.config.sources({
-        { name = 'vim-dadbod-completion' },
-        { name = 'buffer' },
-      }),
-    })
   end,
 }
