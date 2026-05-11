@@ -30,6 +30,8 @@ return {
       'python',
       'markdown',
       'bash',
+      'http',
+      'xml',
     },
   },
   config = function(_, opts)

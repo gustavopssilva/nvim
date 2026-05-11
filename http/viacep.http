@@ -1,0 +1,22 @@
+### Teste da API ViaCEP
+# Use <leader>r para executar a requisição sob o cursor
+
+GET https://viacep.com.br/ws/01001000/json/
+Accept: application/json
+
+###
+
+# Teste com CEP inválido
+GET https://viacep.com.br/ws/51340722/json/
+Accept: application/json
+
+###
+
+# Exemplo de POST (apenas ilustrativo para o ViaCEP que é GET)
+POST https://httpbin.org/post
+Content-Type: application/json
+
+{
+  "nome": "Gemini CLI",
+  "task": "Configurar Kulala"
+}
