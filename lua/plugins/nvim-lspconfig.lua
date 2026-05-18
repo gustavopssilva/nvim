@@ -19,7 +19,7 @@ return {
     require('mason-lspconfig').setup({
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
-        'jsonls', 'lemminx', 'marksman',
+        'jsonls', 'kotlin_language_server', 'lemminx', 'marksman',
         'yamlls', 'ts_ls', 'pyright', 'sqls'
       },
       -- jdtls é gerenciado pelo nvim-jdtls (ftplugin/java.lua), não pelo mason-lspconfig

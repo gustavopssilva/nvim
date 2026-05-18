@@ -32,7 +32,8 @@ return {
     },
     mappings = {
       -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-      ["gf"] = {
+      -- ["gf"] = {
+      ["oo"] = {
         action = function()
           return require("obsidian").util.gf_passthrough()
         end,

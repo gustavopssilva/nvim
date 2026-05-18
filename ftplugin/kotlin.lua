@@ -37,7 +37,6 @@ lspconfig.kotlin_language_server.setup({
   end,
   capabilities = capabilities,
   root_dir = root_pattern,
-  cmd = { "kotlin-language-server" },
   settings = {
     kotlin = {
       compiler = {
@@ -46,3 +45,13 @@ lspconfig.kotlin_language_server.setup({
     },
   },
 })
+
+-- O ftplugin roda APÓS o FileType, então o autocmd do lspconfig já passou
+-- e não anexa no buffer atual. Força anexar manualmente.
+local bufnr = vim.api.nvim_get_current_buf()
+vim.schedule(function()
+  local cfg = require("lspconfig.configs").kotlin_language_server
+  if cfg and cfg.manager then
+    cfg.manager:try_add(bufnr)
+  end
+end)

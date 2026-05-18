@@ -136,6 +136,7 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 set statusline=
 set statusline+=\ %f                     " caminho relativo
 set statusline+=\ %m%r%h%w               " modificado/readonly/help/preview
+set statusline+=\ %{v:hlsearch?printf('[%d/%d]\ ',searchcount().current,searchcount().total):''}
 set statusline+=%=                       " alinha à direita
 set statusline+=\ %y                     " filetype
 set statusline+=\ [%{&fenc!=''?&fenc:&enc}]
@@ -598,7 +599,9 @@ augroup END
 " <leader>gf           Formatar arquivo (Java, SQL, JSON, JS)
 " <C-q>                Toggle Netrw lateral (estilo NERDTree)
 " <leader>ef           Find File (busca arquivo atual no Netrw)
+" - DICA:
 "
-" DICA CLIPBOARD: 'y' copia para o clipboard do sistema (unnamedplus)
+":Ctags para gerar os marcadores 
+"  CLIPBOARD: 'y' copia para o clipboard do sistema (unnamedplus)
 " Requisito: vim --version | grep +clipboard
 " ============================================================================
