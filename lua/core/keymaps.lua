@@ -40,31 +40,30 @@ keymap.set("n", "<leader>ww", ":w!<CR>")        -- salvar
 keymap.set("n", "gx", ":!open <c-r><c-a><CR>") -- abrir URL sob o cursor
 
 -- Gerenciamento de janelas divididas
-keymap.set("n", "<leader>sv", "<C-w>v")     -- dividir janela verticalmente
-keymap.set("n", "<leader>ss", "<C-w>s")     -- dividir janela horizontalmente:próxima
-keymap.set("n", "<leader>se", "<C-w>=")     -- igualar largura das janelas divididas
-keymap.set("n", "<leader>sx", ":close<CR>") -- fechar janela dividida
+keymap.set("n", "<leader>wv", "<C-w>v")     -- dividir janela verticalmente
+keymap.set("n", "<leader>wh", "<C-w>s")     -- dividir janela horizontalmente:próxima
+keymap.set("n", "<leader>wi", "<C-w>=")     -- igualar largura das janelas divididas
+keymap.set("n", "<leader>wx", ":close<CR>") -- fechar janela dividida
 
-keymap.set("n", "<leader>sh", "<C-w>h")     -- Vai para a janela à esquerda
-keymap.set("n", "<leader>sj", "<C-w>j")     -- Vai para a janela abaixo
-keymap.set("n", "<leader>sk", "<C-w>k")     -- Vai para a janela acima
-keymap.set("n", "<leader>sl", "<C-w>l")     -- Vai para a janela à direita
+keymap.set("n", "<leader>sw", "<C-w><5")                   -- diminuir largura das janelas divididas
+keymap.set("n", "<leader>wht", ":split<CR>:terminal<CR>")  -- Nova aba horizontal com terminal
+keymap.set("n", "<leader>wvt", ":vsplit<CR>:terminal<CR>") -- Nova aba vertical com terminal
+keymap.set("n", "<leader>tt", ":!tilix -e nvim -R %<CR>")  -- Abrir o arquivo atual no Tilix com nvim
+keymap.set("t", "<Esc>", "<C-\\><C-n>")                    -- Sair do modo terminal com Esc
 
-keymap.set("n", "<leader>bn", ":bnext")     -- Vai para a janela à direita
-keymap.set("n", "<leader>bp", ":bprev")     -- Vai para a janela à direita
-keymap.set("n", "<leader>bl", ":buffers")   -- Vai para a janela à direita
+-- keymap.set("n", "<leader>wh", "<C-w>h")     -- Vai para a janela à esquerda
+-- keymap.set("n", "<leader>wj", "<C-w>j")     -- Vai para a janela abaixo
+-- keymap.set("n", "<leader>wk", "<C-w>k")     -- Vai para a janela acima
+-- keymap.set("n", "<leader>wl", "<C-w>l")     -- Vai para a janela à direita
+
+keymap.set("n", "<leader>bn", ":bnext")     -- Vai para a buffer à direita
+keymap.set("n", "<leader>bp", ":bprev")     -- Vai para a buffer à direita
+keymap.set("n", "<leader>bl", ":buffers")   -- Vai para a buffer à direita
 keymap.set("n", "<leader>bc", ":lua vim.cmd('buffer ' .. vim.fn.input('Buffer: '))<CR>")
 
 -- keymap.set("n", "<leader>sj", "<C-w>-")     -- diminuir altura da janela dividida
 -- keymap.set("n", "<leader>sk", "<C-w>+")     -- aumentar altura das janelas divididas
 -- keymap.set("n", "<leader>sl", "<C-w>>5")    -- aumentar largura das janelas divididas
-keymap.set("n", "<leader>sw", "<C-w><5")                   -- diminuir largura das janelas divididas
-keymap.set("n", "<leader>sth", ":split<CR>:terminal<CR>")  -- Nova aba horizontal com terminal
-keymap.set("n", "<leader>stv", ":vsplit<CR>:terminal<CR>") -- Nova aba vertical com terminal
-keymap.set("n", "<leader>tt", ":!tilix -e nvim -R %<CR>")  -- Abrir o arquivo atual no Tilix com nvim
-keymap.set("t", "<Esc>", "<C-\\><C-n>")                    -- Sair do modo terminal com Esc
-
-
 
 -- Gerenciamento de abas
 keymap.set("n", "<leader>to", ":tabnew<CR>")   -- abrir uma nova aba

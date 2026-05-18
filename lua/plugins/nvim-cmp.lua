@@ -88,10 +88,12 @@ return {
 
       -- Configuração das fontes de auto-completar
       sources = cmp.config.sources({
-        { name = "nvim_lsp" }, -- Sugestões do LSP
-        { name = "luasnip" },  -- Sugestões de snippets
-        { name = "buffer" },   -- Sugestões baseadas no buffer atual
-        { name = "path" },     -- Sugestões para caminhos de arquivos
+        { name = "obsidian" },     -- Sugestões do Obsidian
+        { name = "obsidian_new" }, -- Sugestões para novas notas Obsidian
+        { name = "nvim_lsp" },     -- Sugestões do LSP
+        { name = "luasnip" },      -- Sugestões de snippets
+        { name = "buffer" },       -- Sugestões baseadas no buffer atual
+        { name = "path" },         -- Sugestões para caminhos de arquivos
       }),
 
       window = {

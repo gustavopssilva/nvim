@@ -151,3 +151,4 @@ vim.api.nvim_set_keymap("x", "<A-S-Up>", ":copy '<-2<CR>gv=gv", { noremap = true
 
 
 
+opt.conceallevel = 1 -- Para o obsidian.nvim conseguir esconder os links markdown
