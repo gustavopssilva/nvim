@@ -45,7 +45,7 @@ keymap.set("n", "<leader>wh", "<C-w>s")     -- dividir janela horizontalmente:pr
 keymap.set("n", "<leader>wi", "<C-w>=")     -- igualar largura das janelas divididas
 keymap.set("n", "<leader>wx", ":close<CR>") -- fechar janela dividida
 
-keymap.set("n", "<leader>sw", "<C-w><5")                   -- diminuir largura das janelas divididas
+keymap.set("n", "<leader>ws", "<C-w><5")                   -- diminuir largura das janelas divididas
 keymap.set("n", "<leader>wht", ":split<CR>:terminal<CR>")  -- Nova aba horizontal com terminal
 keymap.set("n", "<leader>wvt", ":vsplit<CR>:terminal<CR>") -- Nova aba vertical com terminal
 keymap.set("n", "<leader>tt", ":!tilix -e nvim -R %<CR>")  -- Abrir o arquivo atual no Tilix com nvim
