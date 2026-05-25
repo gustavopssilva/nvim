@@ -313,8 +313,10 @@ nnoremap <leader>ql :clast<CR>
 nnoremap <leader>qc :cclose<CR>
 
 " Terminal em split (precisa Vim 8.1+)
-nnoremap <leader>sth :split<CR>:terminal<CR>
-nnoremap <leader>stv :vsplit<CR>:terminal<CR>
+nnoremap <leader>wth :split<CR>:terminal<CR>
+nnoremap <leader>wtv :vsplit<CR>:terminal<CR>
+nnoremap <leader>wh :split<CR>
+nnoremap <leader>wv :vsplit<CR>
 tnoremap <Esc> <C-\><C-n>
 
 " Find / Grep (substituem fzf:Files e fzf:Rg)
@@ -336,17 +338,7 @@ command! -nargs=+ Rg call <SID>Grep(<q-args>)
 nnoremap <C-Down> <C-d>
 nnoremap <C-Up> <C-u>
 
-" Mover linha/bloco com Alt + setas
-nnoremap <A-Down> :move .+1<CR>==
-nnoremap <A-Up> :move .-2<CR>==
-xnoremap <A-Down> :move '>+1<CR>gv=gv
-xnoremap <A-Up> :move '<-2<CR>gv=gv
 
-" Duplicar linha/bloco com Alt+Shift+setas
-nnoremap <A-S-Down> :copy .<CR>==j
-nnoremap <A-S-Up> :copy .-1<CR>==k
-xnoremap <A-S-Down> :copy '>+1<CR>gv=gv
-xnoremap <A-S-Up> :copy '<-2<CR>gv=gv
 
 " Desativa setas em normal/visual (forçar hjkl, igual nvim)
 for s:k in ['<Up>', '<Down>', '<Left>', '<Right>']

@@ -46,8 +46,8 @@ keymap.set("n", "<leader>wi", "<C-w>=")     -- igualar largura das janelas divid
 keymap.set("n", "<leader>wx", ":close<CR>") -- fechar janela dividida
 
 keymap.set("n", "<leader>ws", "<C-w><5")                   -- diminuir largura das janelas divididas
-keymap.set("n", "<leader>wht", ":split<CR>:terminal<CR>")  -- Nova aba horizontal com terminal
-keymap.set("n", "<leader>wvt", ":vsplit<CR>:terminal<CR>") -- Nova aba vertical com terminal
+keymap.set("n", "<leader>wth", ":split<CR>:terminal<CR>")  -- Nova aba horizontal com terminal
+keymap.set("n", "<leader>wtv", ":vsplit<CR>:terminal<CR>") -- Nova aba vertical com terminal
 keymap.set("n", "<leader>tt", ":!tilix -e nvim -R %<CR>")  -- Abrir o arquivo atual no Tilix com nvim
 keymap.set("t", "<Esc>", "<C-\\><C-n>")                    -- Sair do modo terminal com Esc
 
@@ -181,6 +181,8 @@ end)
 -- meus, sera que vai??
 
 keymap.set("n", "<leader>path", ":let @+ = expand('%:p')")     -- Copia o path da raiz ate aqui
+-- Substituiu meu LspInfo
+keymap.set("n", "<leader>info", ":lua for _, c in ipairs(vim.lsp.get_clients()) do print(vim.inspect({ name = c.name, root = c.config.root_dir, cmd = c.config.cmd, filetypes = c.config.filetypes, buffers = c.attached_buffers })) end")
 
 -- Organizar imports no Java
 keymap.set("n", "<leader>go", function()

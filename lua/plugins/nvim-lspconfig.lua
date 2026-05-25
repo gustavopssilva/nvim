@@ -20,7 +20,7 @@ return {
       ensure_installed = {
         'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
         'jsonls', 'kotlin_language_server', 'lemminx', 'marksman',
-        'yamlls', 'ts_ls', 'pyright', 'sqls'
+        'yamlls', 'ts_ls', 'pyright', 'ruff', 'sqls'
       },
       -- jdtls é gerenciado pelo nvim-jdtls (ftplugin/java.lua), não pelo mason-lspconfig
       -- automatic_enable = false impede que servidores instalados via Mason (mas não
@@ -48,10 +48,11 @@ return {
     end
 
 
+    -- pyright é configurado em ftplugin/python.lua (setup dedicado), não aqui
     local servers = {
       'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
       'jsonls', 'lemminx', 'marksman', 'yamlls',
-      'pyright', 'sqls'
+      'sqls'
     }
 
 

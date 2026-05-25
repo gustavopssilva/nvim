@@ -127,28 +127,9 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   end,
 })
 
--- Movimento das setas
-vim.api.nvim_set_keymap("n", "<C-Down>", "<C-d>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<C-Up>", "<C-u>", { noremap = true, silent = true })
-
--- Mover uma linha ou bloco para baixo com Alt + Seta para baixo
-vim.api.nvim_set_keymap("n", "<A-Down>", ":move .+1<CR>==", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("x", "<A-Down>", ":move '>+1<CR>gv=gv", { noremap = true, silent = true })
-
--- Mover uma linha ou bloco para cima com Alt + Seta para cima
-vim.api.nvim_set_keymap("n", "<A-Up>", ":move .-2<CR>==", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("x", "<A-Up>", ":move '<-2<CR>gv=gv", { noremap = true, silent = true })
-
--- Duplicar uma linha ou bloco para baixo com Alt + Shift + Seta para baixo
-vim.api.nvim_set_keymap("n", "<A-S-Down>", ":copy .<CR>==j", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("x", "<A-S-Down>", ":copy '>+1<CR>gv=gv", { noremap = true, silent = true })
-
--- Duplicar uma linha ou bloco para cima com Alt + Shift + Seta para cima
-vim.api.nvim_set_keymap("n", "<A-S-Up>", ":copy .-1<CR>==k", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("x", "<A-S-Up>", ":copy '<-2<CR>gv=gv", { noremap = true, silent = true })
-
-
-
-
 
 opt.conceallevel = 1 -- Para o obsidian.nvim conseguir esconder os links markdown
+opt.timeoutlen = 3000 -- Aumentando o tempo entre comandos de 0,05s para 0,3s
+
+
+
