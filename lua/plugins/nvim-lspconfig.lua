@@ -30,8 +30,8 @@ return {
 
     -- Configurar o Mason Tool Installer (instala sob demanda, sem rodar no startup)
     require('mason-tool-installer').setup({
-      ensure_installed = { 'java-debug-adapter', 'java-test', 'ktlint' },
-      run_on_start = false,
+      ensure_installed = { 'java-debug-adapter', 'java-test', 'ktlint', 'prettierd' },
+      run_on_start = true,
     })
 
     -- Definir variáveis de configuração LSP
