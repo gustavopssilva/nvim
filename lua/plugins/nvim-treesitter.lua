@@ -23,9 +23,9 @@ return {
   -- exige o CLI `tree-sitter` no PATH pra compilar e (b) os .so antigos do
   -- master no diretório do plugin continuam sendo lidos via runtimepath.
   -- Se liga aqui!!!
-  -- Pra reinstalar do zero: `:TSInstall lua json ...` depois de `npm i -g tree-sitter-cli`.
+  -- Pra reinstalar do zero: `:TSInstall lua json properties ...` depois de `npm i -g tree-sitter-cli`.
   config = function()
-    require('nvim-treesitter').setup({})
+    require('nvim-treesitter').setup({ ensure_installed = { "lua", "vim", "vimdoc", "query", "java", "json", "properties" }, auto_install = true })
 
     vim.api.nvim_create_autocmd('FileType', {
       callback = function(args)
