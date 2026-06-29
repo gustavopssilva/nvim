@@ -143,7 +143,7 @@ keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Executar consulta REST
 keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
 
 keymap.set('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>') -- o mesmo que o *
--- keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
 
 keymap.set('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')     -- Ir para a declaração
 keymap.set('n', '<leader>gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')  -- Ir para a implementação

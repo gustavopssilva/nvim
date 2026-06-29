@@ -1,7 +1,7 @@
 return {
   -- Configuração LSP
   'neovim/nvim-lspconfig',
-  event = 'VeryLazy',
+  event = { 'BufReadPost', 'BufNewFile' },
   dependencies = {
     -- Gerenciamento LSP
     { 'williamboman/mason.nvim',                  config = true },
