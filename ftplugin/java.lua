@@ -109,6 +109,18 @@ local config = {
       maven = {
         downloadSources = true, -- Baixar fontes do Maven
       },
+      imports = {
+        gradle = {
+          wrapper = {
+            -- Allowlist de checksums do gradle-wrapper.jar confiados.
+            -- Remove o aviso de segurança do JDTLS ("gradle wrapper could be malicious").
+            -- Cada versão do Gradle gera um jar/checksum diferente; adicione o novo sha256 aqui quando reaparecer.
+            checksums = {
+              { sha256 = "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", allowed = true },
+            },
+          },
+        },
+      },
       implementationsCodeLens = {
         enabled = true, -- Ativa a sugestão de implementações
       },
@@ -168,6 +180,22 @@ local config = {
     -- Referencia os bundles definidos acima para suportar Depuração e Testes Unitários
     bundles = bundles,
     extendedClientCapabilities = jdtls.extendedClientCapabilities,
+    -- A validação do wrapper Gradle roda durante o `initialize`/import, antes de o servidor
+    -- puxar as `config.settings` (modelo pull via workspace/configuration). Por isso a allowlist
+    -- precisa estar AQUI, no initializationOptions, pra ser lida a tempo e remover o aviso de segurança.
+    settings = {
+      java = {
+        imports = {
+          gradle = {
+            wrapper = {
+              checksums = {
+                { sha256 = "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", allowed = true },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 }
 

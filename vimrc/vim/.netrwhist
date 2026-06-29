@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =4
+let g:netrw_dirhistcnt =5
+let g:netrw_dirhist_5='/home/gps2/pessoal/projetos/api/porteiro-api'
 let g:netrw_dirhist_4='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js/src/com/mvsistemas/startweb/modules/conta-limpa'
 let g:netrw_dirhist_3='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js'
 let g:netrw_dirhist_2='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js/src/com/mvsistemas/startweb/actions'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_9='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js/src/com/mvsist
 let g:netrw_dirhist_8='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js/src/com'
 let g:netrw_dirhist_7='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js/src'
 let g:netrw_dirhist_6='/home/gps2/MV/projetos/GIF_1.0/mv-fatur-js'
-let g:netrw_dirhist_5='/home/gps2/MV/projetos/GIF_1.0/api-client/src/main/java/br/com/gif/apiclient/v4/service'

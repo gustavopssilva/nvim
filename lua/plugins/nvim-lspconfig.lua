@@ -52,7 +52,7 @@ return {
     local servers = {
       'bashls', 'cssls', 'html', 'gradle_ls', 'groovyls', 'lua_ls',
       'jsonls', 'lemminx', 'marksman', 'yamlls',
-      'sqls'
+      'sqls', 'kotlin_language_server'
     }
 
 
@@ -72,6 +72,12 @@ return {
               },
             },
           },
+        })
+      elseif server == "kotlin_language_server" then
+        lspconfig.kotlin_language_server.setup({
+          on_attach = lsp_attach,
+          capabilities = lsp_capabilities,
+          root_dir = lspconfig.util.root_pattern("settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "pom.xml", ".git"),
         })
       else
         lspconfig[server].setup({

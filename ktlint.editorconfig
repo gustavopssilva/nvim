@@ -1,0 +1,23 @@
+[*.{kt,kts}]
+ktlint_standard_indent = false
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_import-ordering = disabled
+ktlint_standard_final-newline = disabled
+ktlint_standard_max-line-length = disabled
+ktlint_standard_no-consecutive-blank-lines = disabled
+ktlint_standard_no-blank-line-before-rbrace = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_curly-spacing = disabled
+ktlint_standard_dot-spacing = disabled
+ktlint_standard_comma-spacing = disabled
+ktlint_standard_operator-spacing = disabled
+ktlint_standard_annotation-spacing = disabled
+ktlint_standard_type-parameter-list-spacing = disabled
+ktlint_standard_type-argument-list-spacing = disabled
+ktlint_standard_block-comment-initial-star-alignment = disabled
+ktlint_standard_class-signature-spacing = disabled
+ktlint_standard_function-signature-spacing = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_class-naming = disabled
+ktlint_standard_package-name = disabled
