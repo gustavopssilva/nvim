@@ -13,7 +13,8 @@ return {
         filetypes = { "sql" },
         -- args = { "--stdin", "--spaces", "2" },
         -- args = { "--spaces", "2" },
-            args = { "--spaces", "4", "--keyword-case", "1", "--wrap-limit", "0" }
+            -- args = { "--spaces", "4", "--keyword-case", "2", "--wrap-limit", "0" }
+            args = { "--tabs", "4", "--keyword-case", "2", "--wrap-limit", "80" }
 
       }),
     })

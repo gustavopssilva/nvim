@@ -43,8 +43,27 @@ Across all setups, the LSP `on_attach` disables `documentFormattingProvider` and
 ## Formatting
 
 - `lua/plugins/conform-nvim.lua` is the primary formatter, bound to `<leader>l`. Map: lua→stylua, kotlin→ktlint, js/ts/json/markdown→prettier, python→black.
-- `lua/plugins/none-ls-nvim.lua` adds extras through none-ls/null-ls: `prettierd`, and `pg_format` for SQL with `--spaces 4 --keyword-case 1 --wrap-limit 0`.
+- `lua/plugins/none-ls-nvim.lua` adds extras through none-ls/null-ls: `prettierd`, and `pg_format` for SQL with `--spaces 4 --keyword-case 2 --wrap-limit 0` (keyword-case: 2=UPPERCASE, 1=lowercase, 3=Capitalized).
 - Java formatting goes through JDTLS' own formatter (since LSP formatting is left enabled there via the JDTLS settings, even though the global `on_attach` disables it for everything else).
+
+## Debugging and Testing
+
+- **DAP (Debugger):** Configured via `lua/plugins/nvim-dap-ui.lua` (depends on `nvim-dap`, `nvim-nio`, `nvim-dap-virtual-text`, `telescope-dap`). Keymaps: `<F5>` continue, `<F10>` step over, `<F11>` step into, `<F12>` step out, `<leader>b` toggle breakpoint, `<leader>B` conditional breakpoint.
+  - Java debugging: JDTLS automatically sets up DAP via `jdtls.setup_dap()` in `ftplugin/java.lua`, integrating with the java-debug-adapter and java-test bundles.
+  - DAP UI window appears via dap-ui, with REPL and breakpoint management.
+- **Testing:** Two approaches:
+  - `vim-test` (configured in `lua/plugins/vim-test.lua`): `:TestFile` or `<leader>tt` runs all tests in the current file. Uses Maven for Java, Gradle for Kotlin.
+  - JDTLS test runner: `:JdtlsTestClass` or `<leader>tt` (in java.lua) runs tests via JDTLS' extension; deferred 3s on attach to avoid blocking.
+
+## Snippets and Custom Extensions
+
+- **Custom Snippets:** LuaSnip snippets defined in Lua format live in `lua/snippets/<lang>.lua` (java, kotlin, lua). Loaded on startup via `init.lua`. Navigation: `<Tab>` expands/jumps, `<S-Tab>` jumps backward, `<C-k>` cycles snippet choices.
+- **HTTP/REST Client:** `.http` files use vim-rest-client or similar. Comment syntax is `# %s` (configured in `ftplugin/http.lua`). Example request files in `http/` (e.g., `viacep.http`).
+
+## Session and Workspace Management
+
+- Sessions are enabled via `sessionoptions` in `lua/core/options.lua` (preserves buffers, folds, tabs, terminal state, localoptions, etc.). Useful for resuming work across restarts.
+- Java workspace lives at `~/.jdtls-workspace/<project-name>`, auto-created per project root. Kotlin may generate `.kls-classpath` on first Maven project open (synchronous mvn call).
 
 ## Common commands
 
@@ -77,3 +96,17 @@ Referenced directly by the config:
 - New keymaps go in `lua/core/keymaps.lua` unless they're plugin-local (`keys = { ... }` inside the plugin spec, e.g. `claudecode-nvim.lua`).
 - Comments and `desc` strings are in Portuguese throughout — match the style.
 - Don't re-enable `documentFormattingProvider` on the shared `lsp_attach` — formatting is deliberately routed through conform/none-ls.
+
+## Language-specific notes
+
+- **Java/Kotlin Maven:** First time opening a Kotlin Maven project, `ftplugin/kotlin.lua` runs `mvn dependency:build-classpath` synchronously to generate `.kls-classpath`. This is a one-time setup cost but can block the editor briefly.
+- **Java:** JDK paths are hardcoded to `/usr/lib/jvm/java-{17,21}-openjdk-amd64`. Update `ftplugin/java.lua` if JDKs are installed elsewhere.
+- **Python:** Uses Pyright via `ftplugin/python.lua`. Assumes `pyright-langserver --stdio` on `$PATH` (typically from `npm i -g pyright`).
+- **Kotlin:** LSP requires `kotlin-language-server` on `$PATH`. Test runner via vim-test uses Gradle by default (configurable in `lua/plugins/vim-test.lua`).
+
+## Troubleshooting
+
+- **LSP not attaching?** Run `:checkhealth` to diagnose. Mason-installed servers are set to NOT auto-attach (`automatic_enable = false`); check that your language has an entry in `nvim-lspconfig.lua` or `ftplugin/<lang>.lua`.
+- **Kotlin classpath issues:** Delete `.kls-classpath` and reopen the file to regenerate. Check that Maven/Gradle root markers (pom.xml, build.gradle) are in the project root.
+- **Java workspace duplicates?** JDTLS workspace is keyed by project name from file path root (not `getcwd()`). Ensure `jdtls.setup_dap()` is only called once per buffer via the guard at the top of `ftplugin/java.lua`.
+- **DAP breakpoints not stopping?** Ensure you're running with `:TestFile` or launching a debug config, not just running normally. Check `:DapShowLog` for errors.
