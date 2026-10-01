@@ -1,6 +1,7 @@
 return {
   'mistweaverco/kulala.nvim',
-  -- lazy = false, -- Garante que o plugin carregue para o comando :Kulala existir
+  tag = 'v6.31.1',
+  ft = { 'http', 'rest' },
   init = function()
     vim.filetype.add({
       extension = {
