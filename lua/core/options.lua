@@ -48,7 +48,7 @@ vim.api.nvim_set_keymap("n", "<Esc><Esc>", ":noh<CR>", { noremap = true, silent 
 opt.cursorline = true
 
 -- Aparência
--- opt.termguicolors = true
+opt.termguicolors = true
 opt.background = "dark"
 opt.signcolumn = "yes"
 opt.showmode = false

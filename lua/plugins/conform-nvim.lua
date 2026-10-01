@@ -12,11 +12,13 @@ return {
           typescript = { "prettier" },
           json = { "prettier" },
           markdown = { "prettier" },
-          python = { "black" },
+          -- python = { "black" },
+          python = { "ruff_format" },
         },
       })
 
-      vim.keymap.set({ "n", "v" }, "<leader>l", function()
+      -- vim.keymap.set({ "n", "v" }, "<leader>l", function()
+      vim.keymap.set({ "n", "v" }, "<leader>gf", function()
         conform.format({
           lsp_fallback = true,
           async = false,

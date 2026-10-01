@@ -25,7 +25,7 @@ return {
   -- Se liga aqui!!!
   -- Pra reinstalar do zero: `:TSInstall lua json properties ...` depois de `npm i -g tree-sitter-cli`.
   config = function()
-    require('nvim-treesitter').setup({ ensure_installed = { "lua", "vim", "vimdoc", "query", "java", "json", "properties" }, auto_install = true })
+    require('nvim-treesitter').setup({ ensure_installed = { "lua", "vim", "vimdoc", "query", "java", "json", "properties", "python" }, auto_install = true })
 
     vim.api.nvim_create_autocmd('FileType', {
       callback = function(args)
