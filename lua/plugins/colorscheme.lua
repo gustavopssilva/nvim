@@ -1,59 +1,55 @@
--- I
---
--- return {
---   "navarasu/onedark.nvim",
---   lazy = false,
---   priority = 1000,
---   config = function()
---     require('onedark').setup({
---       style = 'dark',  -- 'dark' | 'darker' | 'cool' | 'deep' | 'warm' | 'warmer' | 'light'
---       transparent = true, -- Habilita fundo transparente
---       term_colors = true,
---       ending_tildes = false,
+-- Tema ativo: troque aqui para mudar de colorscheme
+-- ("jellybeans" | "onedark" | "eclipse-dark" | "eclipse-dark-soft" | "eclipse-dark-meu")
+-- local THEME = "eclipse-dark-soft" -- "jellybeans"
+-- local THEME =  "jellybeans"
+local THEME =  "eclipse-dark"
 
---       highlights = {
---         -- Comment = { italic = true },
---         -- Keyword = { bold = true },
---         -- Adicione outros highlights personalizados se necessário
---       }
---     })
+local function ativo(nome)
+  return THEME == nome
+end
 
---     vim.cmd("colorscheme onedark")
+local transparencia = require("core.transparencia")
 
---   end,
--- }
---
+-- Colorschemes "eclipse-dark*" são locais em colors/ (sem plugin git) e aplicam
+-- a transparência por conta própria em lua/eclipse-dark/apply.lua.
+if ativo("eclipse-dark") or ativo("eclipse-dark-soft") or ativo("eclipse-dark-meu") then
+  vim.cmd("colorscheme " .. THEME)
+end
+
 return {
-  "nanotech/jellybeans.vim",
-  lazy = false,
-  priority = 1000,
-  config = function()
-    ---@diagnostic disable: undefined-global
-    vim.cmd("colorscheme jellybeans")
+  {
+    "nanotech/jellybeans.vim",
+    lazy = not ativo("jellybeans"),
+    priority = ativo("jellybeans") and 1000 or nil,
+    config = function()
+      ---@diagnostic disable: undefined-global
+      vim.cmd("colorscheme jellybeans")
+      transparencia()
 
-    -- Transparência
-    vim.cmd([[
-      highlight Normal guibg=NONE ctermbg=NONE
-      highlight NormalNC guibg=NONE ctermbg=NONE
-      highlight VertSplit guibg=NONE ctermbg=NONE
-      highlight SignColumn guibg=NONE ctermbg=NONE
-      highlight StatusLine guibg=NONE ctermbg=NONE
-      highlight LineNr guibg=NONE ctermbg=NONE
-      highlight Pmenu guibg=NONE ctermbg=NONE
-      highlight PmenuSel guibg=NONE ctermbg=NONE
-      highlight TelescopeBorder guibg=NONE ctermbg=NONE
-      highlight TelescopeNormal guibg=NONE ctermbg=NONE
-      highlight EndOfBuffer guibg=NONE ctermbg=NONE
-    ]])
-    vim.cmd([[
-  highlight Whitespace guibg=NONE ctermbg=NONE
-  highlight SpecialKey guibg=NONE ctermbg=NONE
-  highlight NonText guibg=NONE ctermbg=NONE
-]])
-    -- Estilo
-    -- vim.cmd([[
-    --   highlight Comment gui=italic
-    --   highlight Keyword gui=bold
-    -- ]])
-  end,
+      -- Estilo
+      -- vim.cmd([[
+      --   highlight Comment gui=italic
+      --   highlight Keyword gui=bold
+      -- ]])
+    end,
+  },
+  {
+    "navarasu/onedark.nvim",
+    lazy = not ativo("onedark"),
+    priority = ativo("onedark") and 1000 or nil,
+    config = function()
+      require("onedark").setup({
+        style = "dark", -- 'dark' | 'darker' | 'cool' | 'deep' | 'warm' | 'warmer' | 'light'
+        transparent = true,
+        term_colors = true,
+        ending_tildes = false,
+        highlights = {
+          -- Comment = { italic = true },
+          -- Keyword = { bold = true },
+        },
+      })
+
+      vim.cmd("colorscheme onedark")
+    end,
+  },
 }

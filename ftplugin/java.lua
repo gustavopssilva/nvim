@@ -201,6 +201,8 @@ local config = {
 
 -- Necessário para depuração
 config["on_attach"] = function(client, bufnr)
+  -- Tokens semânticos do JDTLS recolorem a sintaxe depois que o workspace termina de compilar
+  vim.lsp.semantic_tokens.stop(bufnr, client.id)
   jdtls.setup_dap({ hotcodereplace = "auto" })
   -- Carrega main classes sob demanda pra não travar no attach
   vim.defer_fn(function()
