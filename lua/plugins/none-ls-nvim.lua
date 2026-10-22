@@ -14,7 +14,7 @@ return {
         -- args = { "--stdin", "--spaces", "2" },
         -- args = { "--spaces", "2" },
             -- args = { "--spaces", "4", "--keyword-case", "2", "--wrap-limit", "0" }
-            args = { "--tabs", "4", "--keyword-case", "2", "--wrap-limit", "80" }
+            args = { "--tabs", "--keyword-case", "2", "--wrap-limit", "0" }
 
       }),
     })
